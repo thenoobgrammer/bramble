@@ -4,4 +4,4 @@ deploy:
     stage: deploy
     script:
         - npm install
-        - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R dist/* /var/www/discord_bot; fi
+        - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R dist/* /home/ec2-user/discordbot_zbeubbot; fi
