@@ -1,0 +1,66 @@
+require('dotenv').config();
+const { Client } = require('discord.js')
+const ytsr = require('ytsr');
+const { playSong, skipSong, stopSong } = require('./actions');
+const ytdl = require('ytdl-core');
+const QueueManager = require('./queue-manager.js');
+
+const bot_2 = new Client();
+/*const searcher = new YTSearcher({
+    key: process.env.API_KEY,
+    revealed: true
+});*/
+const prefix = '!';
+
+let queueManager = new QueueManager();
+
+bot_2.login(process.env.TOKEN_2);
+bot_2.on('ready', () => {
+    const vChannel = bot_2.channels.cache.get(process.env.MUSIC_CHANNEL_1_ID);
+    vChannel.join().then(connection => {
+        queueManager.get('queue').set(vChannel.id, {
+            vChannel: vChannel,
+            connection: connection,
+            songs: [],
+            volume: 2.5,
+            playing: true
+        });
+        console.log("Bot 2 successfully connected.");
+    }).catch(e => {
+        console.error(e);
+    });
+})
+
+
+bot_2.on('message', (msg) => {
+    if (msg.author.bot) return;
+    if (!msg.content.startsWith(prefix)) return;
+
+    const args = msg.content.slice(prefix.length).trim().split(/ +/g);
+    const commmand = args.shift().toLowerCase();
+
+    let channelQueue = queueManager.get('queue').get(process.env.MUSIC_CHANNEL_1_ID);
+
+    if (commmand === 'play') {
+        play(channelQueue, msg);
+    }
+    if (commmand === 'skip') {
+        skipSong(channelQueue, msg)
+    }
+    if (commmand === 'stop') {
+        stopSong(channelQueue, msg)
+    }
+;
+    async function play(channelQueue, msg) {
+        let result = await ytsr(args.join(' '))
+        const songInfo = result.items.filter(x => x.type === 'video')[0];
+        const song = {
+            title: songInfo.title,
+            url: songInfo.url
+        }
+    
+        channelQueue.songs.push(song);
+        playSong(channelQueue, msg, song)
+        console.log(`The song has been added to queue ${song.title}`);
+    }
+});
