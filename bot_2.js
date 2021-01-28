@@ -2,14 +2,9 @@ require('dotenv').config();
 const { Client } = require('discord.js')
 const ytsr = require('ytsr');
 const { playSong, skipSong, stopSong } = require('./actions');
-const ytdl = require('ytdl-core');
 const QueueManager = require('./queue-manager.js');
 
 const bot_2 = new Client();
-/*const searcher = new YTSearcher({
-    key: process.env.API_KEY,
-    revealed: true
-});*/
 const prefix = '!';
 
 let queueManager = new QueueManager();
@@ -48,9 +43,8 @@ bot_2.on('message', (msg) => {
         skipSong(channelQueue, msg)
     }
     if (commmand === 'stop') {
-        stopSong(channelQueue, msg)
+        stopSong(channelQueue)
     }
-;
     async function play(channelQueue, msg) {
         let result = await ytsr(args.join(' '))
         const songInfo = result.items.filter(x => x.type === 'video')[0];

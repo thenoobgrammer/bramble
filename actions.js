@@ -1,12 +1,12 @@
+require('dotenv').config();
 const ytdl = require('ytdl-core');
 
 async function playSong(channelQueue, msg, song) {
     if (!song) {
         channelQueue.vChannel.leave();
-        //queue.getdelete(msg.guild.id);
-        return -1;
+        channelQueue.get('queue').delete(process.env.MUSIC_CHANNEL_1_ID);
+        return;
     }
-    console.log(channelQueue)
     const dispatcher = channelQueue.connection
         .play(ytdl(song.url))
         .on('finish', () => {
@@ -17,21 +17,16 @@ async function playSong(channelQueue, msg, song) {
         })
 }
 
-async function stopSong(channelQueue, msg) {
-    if (!msg.member.voice.channel) {
-        return msg.channel.send('You need to join voice chan first');
-    }
+async function stopSong(channelQueue) {
     channelQueue.songs = [];
     channelQueue.connection.dispatcher.end();
 }
 
 async function skipSong(channelQueue, msg) {
-    if (!msg.member.voice.channel) {
-        return msg.channel.send('You need to join voice chan first');
+    if (!serverQueue) {
+        return msg.channel.send('No song to play next.');
     }
-    if (!serverQueue)
-        return msg.channel.send('Queue is empty');
-        channelQueue.connection.dispatcher.end();
+    channelQueue.connection.dispatcher.end();
 }
 
 async function playAudioFile(msg, path) {
