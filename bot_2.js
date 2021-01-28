@@ -9,9 +9,9 @@ const prefix = '!';
 
 let queueManager = new QueueManager();
 
-bot_2.login(process.env.TOKEN_2);
+bot_2.login(process.env.PROD_TOKEN_2);
 bot_2.on('ready', () => {
-    const vChannel = bot_2.channels.cache.get(process.env.MUSIC_CHANNEL_1_ID);
+    const vChannel = bot_2.channels.cache.get(process.env.PROD_MUSIC_CHANNEL_1_ID);
     vChannel.join().then(connection => {
         queueManager.get('queue').set(vChannel.id, {
             vChannel: vChannel,
@@ -34,7 +34,7 @@ bot_2.on('message', (msg) => {
     const args = msg.content.slice(prefix.length).trim().split(/ +/g);
     const commmand = args.shift().toLowerCase();
 
-    let channelQueue = queueManager.get('queue').get(process.env.MUSIC_CHANNEL_1_ID);
+    let channelQueue = queueManager.get('queue').get(process.env.PROD_MUSIC_CHANNEL_1_ID);
 
     if (commmand === 'play') {
         play(channelQueue, msg);
