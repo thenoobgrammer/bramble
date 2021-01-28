@@ -7,7 +7,7 @@ const { SOUNDS, GENRES } = require('./constants');
 const bot_1 = new Client();
 const prefix = '!';
 
-bot_1.login(process.env.PROD_TOKEN_1);
+bot_1.login(process.env.STAGE_TOKEN_1);
 bot_1.on('ready', () => {
     console.log("Bot 1 successfully connected.");
 })

@@ -33,9 +33,9 @@ async function playAudioFile(msg, path) {
     await vChannel.join()
         .then(connection => {
             const dispatcher = connection.play(path, { seek: 0, volume: 0.5 });
-            dispatcher.on('speaking', speaking => {
-                if (!speaking)
-                    vChannel.leave()
+            console.log(connection)
+            dispatcher.on('finish', () => {
+                vChannel.leave()
             });
         });
 }
