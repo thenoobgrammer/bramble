@@ -1,2 +1,3 @@
-require('./bot_1.js');
-require('./bot_2.js');
+require('dotenv').config();
+require('./src/bot_1.js');
+require('./src/bot_2.js');

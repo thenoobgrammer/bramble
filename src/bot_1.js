@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const { Client } = require('discord.js');
 const { playAudioFile, type } = require('./actions');
 const { fetch_by_genre } = require('./commands');

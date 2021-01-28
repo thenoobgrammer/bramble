@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { Client } = require('discord.js')
 const ytsr = require('ytsr');
 const { playSong, skipSong, stopSong } = require('./actions');

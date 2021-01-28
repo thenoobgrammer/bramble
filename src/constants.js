@@ -1,17 +1,18 @@
 module.exports = Object.freeze({
     SOUNDS: [
-        {  key: 'zbeub', filePath: './mp3s/zbeub.mp3' },
-        {  key: 'ayou', filePath: './mp3s/ayou.mp3' },
-        {  key: 'bruh', filePath: './mp3s/bruh.mp3' },
-        {  key: 'kevin', filePath: './mp3s/kevin.mp3' },
-        {  key: 'rosa', filePath: './mp3s/rosa.mp3' },
-        {  key: 'haun', filePath: './mp3s/haun.mp3' },
-        {  key: 'highiq', filePath: './mp3s/highiq.mp3' },
-        {  key: 'wallacox', filePath: './mp3s/wallacox.mp3' },
-        {  key: 'maxime', filePath: './mp3s/maxime.mp3' },
-        {  key: 'xplik', filePath: './mp3s/xplik.mp3' },
-        {  key: 'gasp', filePath: './mp3s/gasp.mp3' },
-        {  key: 'md', filePath: './mp3s/md.mp3' }
+        {  key: 'zbeub', filePath: '../mp3s/zbeub.mp3' },
+        {  key: 'ayou', filePath: '../mp3s/ayou.mp3' },
+        {  key: 'bruh', filePath: '../mp3s/bruh.mp3' },
+        {  key: 'kevin', filePath: '../mp3s/kevin.mp3' },
+        {  key: 'rosa', filePath: '../mp3s/rosa.mp3' },
+        {  key: 'haun', filePath: '../mp3s/haun.mp3' },
+        {  key: 'highiq', filePath: '../mp3s/highiq.mp3' },
+        {  key: 'wallacox', filePath: '../mp3s/wallacox.mp3' },
+        {  key: 'maxime', filePath: '../mp3s/maxime.mp3' },
+        {  key: 'xplik', filePath: '../mp3s/xplik.mp3' },
+        {  key: 'gasp', filePath: '../mp3s/gasp.mp3' },
+        {  key: 'md', filePath: '../mp3s/md.mp3' },
+        {  key: 'benchod', filePath: '../mp3s/benchod.mp3' },
     ],
 
     GENRES: [

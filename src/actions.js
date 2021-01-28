@@ -1,4 +1,3 @@
-require('dotenv').config();
 const ytdl = require('ytdl-core');
 
 async function playSong(channelQueue, msg, song) {
