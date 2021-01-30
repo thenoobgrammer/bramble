@@ -6,7 +6,8 @@ build:
     stage: build
     image: buildpack-deps
     before_script:
-        - apt-get install zip
+        - apt-get update
+        - apt-get install zip unzip
     script:
         - mkdir dist
         - touch dist/info.txt
@@ -25,6 +26,7 @@ deploy:
         paths:
           - node_modules/
     before_script:
+        - apt-get update
         - apt-get install openssh-client
         - eval $(ssh-agent -s)
         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
