@@ -11,9 +11,9 @@ cache:
 install_dependencies:
   stage: build
   script:
-    - sudo rm -rf ./home/ec2-user/discordbot_zbeub
-    - sudo mkdir discordbot_zbeub
-    - sudo cp -r ./* /discordbot_zbeub
+    - sudo rm -rf ~/discordbot_zbeub
+    - sudo mkdir ~/discordbot_zbeub
+    - sudo cp -r ./* ~/discordbot_zbeub
     - sudo npm install 
   artifacts:
     paths:
