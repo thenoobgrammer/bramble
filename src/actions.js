@@ -3,7 +3,7 @@ const ytdl = require('ytdl-core');
 async function playSong(channelQueue, msg, song) {
     if (!song) {
         channelQueue.vChannel.leave();
-        channelQueue.get('queue').delete(process.env.MUSIC_CHANNEL_1_ID);
+        channelQueue.get('queue').delete(process.env.PROD_MUSIC_CHANNEL_1_ID);
         return;
     }
     const dispatcher = channelQueue.connection

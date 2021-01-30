@@ -34,7 +34,7 @@ bot_2.on('message', (msg) => {
     const commmand = args.shift().toLowerCase();
 
     let channelQueue = queueManager.get('queue').get(process.env.PROD_MUSIC_CHANNEL_1_ID);
-
+    console.log(channelQueue)
     if (commmand === 'play') {
         play(channelQueue, msg);
     }
