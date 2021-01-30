@@ -12,7 +12,7 @@ install_dependencies:
   stage: build
   script:
     - sudo rm -rf ./home/ec2-user/discordbot_zbeub
-    - sudo cd ./home/ec2-user/
+    - sudo cd ./home/ec2-user
     - sudo mkdir discordbot_zbeub
     - sudo cp -r ./* /discordbot_zbeub
     - sudo npm install 
