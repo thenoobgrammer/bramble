@@ -17,7 +17,3 @@ install_dependencies:
   artifacts:
     paths:
       - node_modules/
-
-testing_testing:
-  stage: test
-  script: npm test
