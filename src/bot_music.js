@@ -16,7 +16,7 @@ bot_2.on('ready', () => {
             vChannel: vChannel,
             connection: connection,
             songs: [],
-            volume: 2.5,
+            volume: 0.5,
             playing: true
         });
         console.log("Bot 2 successfully connected.");

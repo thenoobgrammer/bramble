@@ -7,7 +7,7 @@ async function playSong(queueManager, channelQueue, msg, song) {
         return;
     }
     const dispatcher = channelQueue.connection
-        .play(ytdl(song.url))
+        .play(ytdl(song.url), {volume: channelQueue.volume})
         .on('finish', () => {
             channelQueue.songs.shift();
             playSong(channelQueue, msg, channelQueue.songs[0]);
