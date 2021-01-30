@@ -1,20 +1,17 @@
 image: node:latest
 
 stages:
-  - build
-  - test
+  - deploy
 
 cache:
   paths:
     - node_modules/
 
 install_dependencies:
-  stage: build
+  stage: deploy
   script:
-    - sudo rm -rf ~/discordbot_zbeub
-    - sudo mkdir ~/discordbot_zbeub
-    - sudo cp -r ./* ~/discordbot_zbeub
-    - sudo npm install 
+    - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R ./* /home/ec2-user/discordbot_zbeub; fi
+    - npm install 
   artifacts:
     paths:
       - node_modules/
