@@ -34,9 +34,9 @@ bot_2.on('message', (msg) => {
     const commmand = args.shift().toLowerCase();
 
     let channelQueue = queueManager.get('queue').get(process.env.PROD_MUSIC_CHANNEL_1_ID);
-    console.log(channelQueue)
+    
     if (commmand === 'play') {
-        play(channelQueue, msg);
+        play(queueManager, channelQueue, msg);
     }
     if (commmand === 'skip') {
         skipSong(channelQueue, msg)
@@ -44,7 +44,7 @@ bot_2.on('message', (msg) => {
     if (commmand === 'stop') {
         stopSong(channelQueue)
     }
-    async function play(channelQueue, msg) {
+    async function play(queueManager, channelQueue, msg) {
         let result = await ytsr(args.join(' '))
         const songInfo = result.items.filter(x => x.type === 'video')[0];
         const song = {
@@ -53,7 +53,7 @@ bot_2.on('message', (msg) => {
         }
     
         channelQueue.songs.push(song);
-        playSong(channelQueue, msg, song)
+        playSong(queueManager, channelQueue, msg, song)
         console.log(`The song has been added to queue ${song.title}`);
     }
 });
