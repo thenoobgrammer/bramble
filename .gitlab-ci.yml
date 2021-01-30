@@ -10,8 +10,8 @@ cache:
 install_dependencies:
   stage: deploy
   script:
-    - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R ./* /home/ec2-user/discordbot_zbeub; fi
-    - npm install 
+    - sudo if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R ./* /home/ec2-user/discordbot_zbeub; fi
+    - sudo npm install 
   artifacts:
     paths:
       - node_modules/
