@@ -11,9 +11,9 @@ image: node:latest
     install_dependencies:
       stage: build
       script:
-        - rm -rf ./home/ec2-user/discordbot_zbeub
-        - cp -r ./* /home/ec2-user 
-        - npm install 
+        - sudo rm -rf ./home/ec2-user/discordbot_zbeub
+        - sudo cp -r ./* /home/ec2-user 
+        - sudo npm install 
       artifacts:
         paths:
           - node_modules/
