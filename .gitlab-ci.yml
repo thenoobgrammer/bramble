@@ -12,7 +12,7 @@ install_dependencies:
   stage: build
   script:
     - sudo rm -rf ./home/ec2-user/discordbot_zbeub
-    - sudo cp -r ./* /home/ec2-user 
+    - sudo cp -r ./* /home/ec2-user/discordbot_zbeub
     - sudo npm install 
   artifacts:
     paths:
