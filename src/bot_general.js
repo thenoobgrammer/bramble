@@ -1,7 +1,7 @@
 
 const { Client, MessageEmbed } = require('discord.js');
-const { playAudioFile, type } = require('./actions');
-const { fetch_by_genre } = require('./commands');
+const { playAudioFile, type } = require('./commands');
+const { fetch_by_genre } = require('./actions');
 const { drinkContaining, drinkDetail } = require('./drinks');
 const { SOUNDS, GENRES } = require('./constants');
 

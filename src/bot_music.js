@@ -1,6 +1,6 @@
 const { Client } = require('discord.js')
 const ytsr = require('ytsr');
-const { playSong, skipSong, stopSong } = require('./actions');
+const { playSong, skipSong, stopSong } = require('./commands');
 const QueueManager = require('./queue-manager.js');
 
 const bot_2 = new Client();
