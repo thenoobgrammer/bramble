@@ -10,7 +10,7 @@ cache:
 install_dependencies:
   stage: deploy
   script:
-    - sudo if [ "$CI_COMMIT_REF_NAME" == "master" ]; then cp -R ./* /home/ec2-user/discordbot_zbeub; fi
+    - sudo cp -R ./* /home/ec2-user/discordbot_zbeub; fi
     - sudo npm install 
   artifacts:
     paths:
