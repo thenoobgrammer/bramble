@@ -1,23 +1,23 @@
 image: node:latest
 
-    stages:
-      - build
-      - test
+stages:
+  - build
+  - test
 
-    cache:
-      paths:
-        - node_modules/
+cache:
+  paths:
+    - node_modules/
 
-    install_dependencies:
-      stage: build
-      script:
-        - sudo rm -rf ./home/ec2-user/discordbot_zbeub
-        - sudo cp -r ./* /home/ec2-user 
-        - sudo npm install 
-      artifacts:
-        paths:
-          - node_modules/
+install_dependencies:
+  stage: build
+  script:
+    - sudo rm -rf ./home/ec2-user/discordbot_zbeub
+    - sudo cp -r ./* /home/ec2-user 
+    - sudo npm install 
+  artifacts:
+    paths:
+      - node_modules/
 
-    testing_testing:
-      stage: test
-      script: npm test
+testing_testing:
+  stage: test
+  script: npm test
