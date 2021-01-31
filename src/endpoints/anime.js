@@ -1,7 +1,7 @@
 const { API } = require('./api');
 
 module.exports = Object.freeze({
-    fetch_by_genre : async function(commandName, genre, msg) {
+    getByGenre : async function(commandName, genre) {
         return API.anime.get(`/genre/${commandName}/${genre}`, {
             order_by: 'score'
         })

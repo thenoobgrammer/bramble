@@ -1,31 +1,38 @@
 const ytdl = require('ytdl-core');
 
-async function playSong(queueManager, channelQueue, msg, song) {
-    if (!song) {
-        channelQueue.vChannel.leave();
-        queueManager.get('queue').delete(process.env.PROD_MUSIC_CHANNEL_1_ID);
-        return;
-    }
-    const dispatcher = channelQueue.connection
-        .play(ytdl(song.url), {volume: channelQueue.volume})
+async function playSong(channelQueue, song) {
+    channelQueue.connection
+        .play(ytdl(song.url), { volume: channelQueue.volume })
         .on('finish', () => {
             channelQueue.songs.shift();
-            playSong(channelQueue, msg, channelQueue.songs[0]);
-            if (channelQueue.songs.length > 0)
-                channelQueue.txtChannel.send(`Now playing ${channelQueue.songs[0].url}`)
+            if (channelQueue.songs[0])
+                console.log(`No songs to play next, please choose song`);
+            else
+                playSong(channelQueue, channelQueue.songs[0])
         })
 }
 
 async function stopSong(channelQueue) {
+    if (!channelQueue)
+        return;
     channelQueue.songs = [];
     channelQueue.connection.dispatcher.end();
 }
 
-async function skipSong(channelQueue, msg) {
-    if (!serverQueue) {
-        return msg.channel.send('No song to play next.');
-    }
+async function skipSong(channelQueue) {
+    if (!channelQueue)
+        return;
     channelQueue.connection.dispatcher.end();
+}
+
+async function volume(channelQueue, volume) {
+    if (!channelQueue)
+        return;
+    channelQueue.connection.setVolume(volume < 0 ? 0 : volume);
+}
+
+async function leave(channelQueue) {
+    channelQueue.vChannel.leave();
 }
 
 async function playAudioFile(msg, path) {
@@ -48,6 +55,8 @@ module.exports = {
     playSong,
     stopSong,
     skipSong,
+    volume,
+    leave,
     type,
     playAudioFile
 }
