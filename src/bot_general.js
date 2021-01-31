@@ -30,7 +30,7 @@ bot_1.on('message', (msg) => {
     }
 
     else if (commmand === 'contains') {
-        getCocktailContaining(args.joins(' '))
+        getCocktailContaining(args.join(' '))
             .then(cocktail => {
                 embedMsg(cocktail, msg)
             })
