@@ -1,6 +1,6 @@
 import glob
 import discord
-
+from discord.utils import get
 from discord.ext import commands
 from helpers import utils
 
@@ -76,7 +76,7 @@ class Audios(commands.Cog):
     async def play_audio(self, ctx, audiofile):
         if not ctx.message.author.voice:
             return
-        if utils.is_connected(ctx):
+        if self.is_connected(ctx):
             return
 
         channel = ctx.message.author.voice.channel
@@ -86,6 +86,9 @@ class Audios(commands.Cog):
         print(source)
         voice.play(source, after=lambda e: self.bot.loop.create_task(voice.disconnect()))
 
+    def is_connected(ctx):
+        voice_client = get(ctx.bot.voice_clients, guild=ctx.guild)
+        return voice_client and voice_client.is_connected()
 
 def setup(bot):
     bot.add_cog(Audios(bot))

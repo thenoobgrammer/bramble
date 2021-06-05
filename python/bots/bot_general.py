@@ -1,5 +1,3 @@
-import asyncio
-
 from discord.ext import commands
 
 COMMAND_PREFIX = '!'
