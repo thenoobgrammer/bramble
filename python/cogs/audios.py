@@ -73,7 +73,7 @@ class Audios(commands.Cog):
     async def zbeub(self, ctx):
         await self.play_audio(ctx, 'zbeub')
 
-    async def play_audio(self, ctx, audiofile):
+    async def play_audio(ctx, audiofile):
         if not ctx.message.author.voice:
             return
         if self.is_connected(ctx):
