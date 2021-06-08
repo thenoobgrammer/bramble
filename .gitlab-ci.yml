@@ -11,7 +11,11 @@ install_dependencies:
   stage: deploy
   script:
     - sudo cp -R ./* /home/ec2-user/discordbot_zbeub
-    - sudo npm install 
+    - sudo cd node
+    - sudo npm install
+    - sudo cd ../
+    - sudo cd python/sh
+    - sudo ./install_dependencies.sh
   artifacts:
     paths:
       - node_modules/
