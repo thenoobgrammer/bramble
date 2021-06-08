@@ -12,10 +12,11 @@ install_dependencies:
   script:
     - sudo cp -R ./* /home/ec2-user/discordbot_zbeub
     - sudo cd node
+    - echo "Installing node_modules dependencies"
     - sudo npm install
     - sudo cd ../
-    - sudo cd python/sh
-    - sudo .\install_dependencies.sh
+    - echo "Installing python dependencies"
+    - sudo cd python/sh/install_dependencies.sh
   artifacts:
     paths:
       - node_modules/
