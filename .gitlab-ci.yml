@@ -21,7 +21,6 @@ build-python-modules:
   stage: build
   image: python:3.9
   script:
-    - sudo which python
     - python -m pip --version
     - python -m pip
     - sudo cd python
