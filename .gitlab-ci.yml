@@ -23,7 +23,7 @@ build-python-modules:
   script:
     - sudo cd python
     - echo "Installing python dependencies"
-    - sudo pip install requirements.txt
+    - sudo pip3 install requirements.txt
 
 copy-files-to-server:
   stage: deploy
