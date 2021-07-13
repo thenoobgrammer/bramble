@@ -1,19 +1,33 @@
-image: node:latest
-
 stages:
+  - build
   - deploy
 
 cache:
   paths:
     - node_modules/
 
-install_dependencies:
-  stage: deploy
+build-node-modules:
+  stage: build
+  image: node:latest
   script:
-    - sudo cp -R ./* /home/ec2-user/discordbot_zbeub
     - sudo cd node
     - echo "Installing node_modules dependencies"
     - sudo npm install
   artifacts:
     paths:
       - node_modules/
+
+build-python-modules:
+  stage: build
+  image: python:3.9
+  script:
+    - python -m pip --version
+    - python -m pip
+    - sudo cd python
+    - echo "Installing python dependencies"
+    - sudo pip3 install requirements.txt
+
+copy-files-to-server:
+  stage: deploy
+  script:
+    - sudo cp -R ./* /home/ec2-user/discordbot_zbeub

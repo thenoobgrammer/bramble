@@ -1,0 +1,14 @@
+python-dotenv
+os
+discord
+random2
+bs4
+urlopen
+aiohttp
+glob2
+beautifulsoup4
+lxml
+requests
+youtube_dl
+PyNaCl
+ffmpeg

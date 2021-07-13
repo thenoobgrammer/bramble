@@ -7,7 +7,6 @@ from urllib.request import urlopen as uReq
 
 import aiohttp
 
-
 class Anime(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
