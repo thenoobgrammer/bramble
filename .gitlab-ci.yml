@@ -17,15 +17,15 @@ build-node-modules:
     paths:
       - node_modules/
 
-build-python-modules:
-  stage: build
-  image: python:3.9
-  script:
-    - python -m pip --version
-    - python -m pip
-    - sudo cd python
-    - echo "Installing python dependencies"
-    - sudo pip3 install requirements.txt
+# build-python-modules:
+#   stage: build
+#   image: python:3.9
+#   script:
+#     - python -m pip --version
+#     - python -m pip
+#     - sudo cd python
+#     - echo "Installing python dependencies"
+#     - sudo pip3 install requirements.txt
 
 copy-files-to-server:
   stage: deploy
