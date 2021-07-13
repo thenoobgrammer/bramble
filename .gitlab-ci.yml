@@ -14,9 +14,6 @@ install_dependencies:
     - sudo cd node
     - echo "Installing node_modules dependencies"
     - sudo npm install
-    - sudo cd ../
-    - echo "Installing python dependencies"
-    - sudo python/sh/install_dependencies.sh
   artifacts:
     paths:
       - node_modules/
