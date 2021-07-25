@@ -10,13 +10,12 @@ build-node-modules:
   stage: build
   image: node:latest
   script:
-    - sudo cd node
     - echo "Installing node_modules dependencies"
     - sudo npm install
   artifacts:
     paths:
       - node_modules/
-      
+
 copy-files-to-server:
   stage: deploy
   script:
