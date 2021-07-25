@@ -1,22 +1,17 @@
+image: node:latest
+
 stages:
-  - build
   - deploy
 
 cache:
   paths:
     - node_modules/
 
-build-node-modules:
-  stage: build
-  image: node:latest
-  script:
-    - echo "Installing node_modules dependencies"
-    - sudo npm install
-  artifacts:
-    paths:
-      - node_modules/
-
-copy-files-to-server:
+install_dependencies:
   stage: deploy
   script:
     - sudo cp -R ./* /home/ec2-user/discordbot_zbeub
+    - sudo npm install 
+  artifacts:
+    paths:
+      - node_modules/
