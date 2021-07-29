@@ -12,6 +12,7 @@ module.exports = Object.freeze({
         {  key: 'xplik', filePath: './mp3s/xplik.mp3' },
         {  key: 'gasp', filePath: './mp3s/gasp.mp3' },
         {  key: 'md', filePath: './mp3s/md.mp3' },
+        {  key: 'tuturu', filePath: './mp3s/tuturu.mp3' },
         {  key: 'benchod', filePath: './mp3s/benchod.mp3' },
     ],
 
