@@ -10,12 +10,12 @@ const query = `product_list_limit=96`;
 async function loadDataIntoDb() {
 	const maxViewPerPage = await getMaxViewPerPage();
 	const maxPage = await getMaxPage(maxViewPerPage);
-
+	
 	let list = [];
-
 	for (let page = 1; page < maxPage; page++) {
+		console.log(page)
 		await axios
-			.get(`${url}?p=${page}${query}`)
+			.get(`${url}?p=${page}&${query}`)
 			.then((response) => {
 				const $ = cheerio.load(response.data);
 				const listDrinks = $('li.item.product.product-item');
@@ -33,8 +33,8 @@ async function loadDataIntoDb() {
 	};
 	
 	console.log(list.length);
-	//db.insertMany('drinks', list);
-	//db.close();
+	db.insertMany('drinks', list);
+	db.close();
 }
 
 async function getMaxViewPerPage() {
@@ -50,13 +50,12 @@ async function getMaxViewPerPage() {
 				viewPerPages.push(parseInt(value));
 			});
 		});
-
+	
 	return viewPerPages[viewPerPages.length - 1];
 }
 
 async function getMaxPage(maxViewPerPage) {
 	let maxPage = 0;
-
 	await axios
 		.get(`${url}?${query}`)
 		.then((response) => {
