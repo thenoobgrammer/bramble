@@ -1,11 +1,12 @@
 require('dotenv').config();
-//const db = require('./src/db.js');
-require('./src/webcrap/drinks.js');
+const db = require('./src/db.js');
+const drinks = require('./src/scripts/drinks.js');
 //require('./src/bot_general.js');
 //require('./src/bot_music.js');
 
 const express = require('express');
 const app = express();
+
 
 app.use(function(req, res, next) {
     console.log(req.method, req.path);
@@ -13,6 +14,9 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
+    //db.dropCollection('drinks');
+    //db.createCollection('drinks');
+    drinks.loadDataIntoDb();
     res.send("<h1>Hi</h1>");
 });
 
