@@ -1,10 +1,28 @@
+resource_types:
+- name: git
+  type: registry-image
+  source:
+    repository: concourse/git-resource
+    tag: ubuntu
+
+
 resources:
 - name: repo
+  check_every: 2m
   type: git
+  icon: github
   source:
-    uri: https://gitlab.com/ant.hakim.stud/discord_bot.git
-    branch: feature/drinks
-    #private_key: ((private-repo-key))
+    uri: ((git-uri))
+    branch: ((git-branch))
+
+- name: my-bucket
+  type: ec2
+  icon: aws
+  source:
+    access_key_id: ((aws_sts.access_key_id))
+    secret_access_key: ((aws_sts.secret_access_key))
+    session_token: ((aws_sts.session_token))
+
 - name: node-image
   type: registry-image
   source:
@@ -12,12 +30,13 @@ resources:
     tag: 13.10.1-stretch
 
 jobs:
-- name: test
+- name: install
   public: true
   plan:
   - get: node-image
   - get: repo
     trigger: true
+  - put: my-bucket
   - task: install
     image: node-image
     config:
@@ -30,16 +49,4 @@ jobs:
       run:
         path: npm
         args: ["install"]
-        dir: repo
-  - task: test
-    image: node-image
-    config:
-      inputs:
-      - name: repo
-      - name: dependencies
-        path: repo/node_modules
-      platform: linux
-      run:
-        path: npm
-        args: ["run", "test"]
         dir: repo
