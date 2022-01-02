@@ -1,7 +1,49 @@
-git-uri: https://github.com/antohak/discord_bot.git
-git-branch: feature/drinks
-private-repo-key: |
-  -----BEGIN RSA PRIVATE KEY-----
-  ...
-  -----END RSA PRIVATE KEY-----
+git-uri: git@github.com:thenoobgrammer/discord_bot.git
+git-branch: master
+git-private-key: |
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  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
+  -----END OPENSSH PRIVATE KEY-----
+bucket_name: discordbotaws
+access_key_id: AKIAX377LHZNFHZA53UY
+secret_access_key: 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
+region_name: us-east-2
+path-s3: discordbotaws/src/discord_bot.zip 
+filename: tL2ecJ3EYPYcBDGMu8TN4tSvOaIxPy17
+
   

@@ -5,6 +5,11 @@ resource_types:
     repository: concourse/git-resource
     tag: ubuntu
 
+resource_types:
+- name: s3-bucket
+  type: docker-image
+  source:
+    repository: troykinsella/s3-resource-simple
 
 resources:
 - name: repo
@@ -14,39 +19,42 @@ resources:
   source:
     uri: ((git-uri))
     branch: ((git-branch))
-
+    private_key: ((git-private-key))
+    
 - name: my-bucket
-  type: ec2
+  type: s3-bucket
   icon: aws
   source:
-    access_key_id: ((aws_sts.access_key_id))
-    secret_access_key: ((aws_sts.secret_access_key))
-    session_token: ((aws_sts.session_token))
+    bucket: ((bucket_name))
+    versioned_file: ((path-s3))
+    access_key_id: ((access_key_id))
+    secret_access_key: ((secret_access_key))  
+    region_name: ((region_name))
 
-- name: node-image
-  type: registry-image
-  source:
-    repository: node
-    tag: 13.10.1-stretch
+# - name: node-image
+#   type: registry-image
+#   source:
+#     repository: node
+#     tag: 13.10.1-stretch
 
 jobs:
-- name: install
+- name: deploy-to-bucket
   public: true
   plan:
-  - get: node-image
-  - get: repo
+  - get: repo 
     trigger: true
   - put: my-bucket
-  - task: install
-    image: node-image
-    config:
-      inputs:
-      - name: repo
-      outputs:
-      - name: dependencies
-        path: repo/node_modules
-      platform: linux
-      run:
-        path: npm
-        args: ["install"]
-        dir: repo
+  # - task: install
+  #   image: node-image
+  #   config:
+  #     inputs:
+  #     - name: repo
+  #     outputs:
+  #     - name: dependencies
+  #       path: repo/node_modules
+  #     platform: linux
+  #     run:
+  #       path: npm
+  #       args: ["install"]
+  #       dir: repo
+  # - task: extract
