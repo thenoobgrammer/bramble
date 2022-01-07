@@ -17,19 +17,32 @@ async function addToQueue(songData) {
 }
 
 async function play(optionalIdx) {
-    if (optionalIdx && optionalIdx instanceof Number && optionalIdx >= 0 && optionalIdx < queue.length)
-        currentIdx = optionalIdx;
-
-    const dispatcher = connection.play(await ytdl(queue[currentIdx].url), { 
+    const audioOpts = {
         type: 'opus',
-        fmt: 'mp3', 
-        volume: defaultVolume, 
+        fmt: 'mp3',
+        volume: defaultVolume,
         highWaterMark: 1,
         filter: 'audioonly',
         encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
-    });
-    dispatcher.on('start', () => console.log('song started'));
-    dispatcher.on('finish', () => next());
+    };
+
+    let dispatcher = null;
+
+    if (optionalIdx && optionalIdx - 1 >= 0 && optionalIdx - 1 < queue.length) {
+        if(optionalIdx-1 === currentIdx)
+            return;
+        currentIdx = optionalIdx - 1;
+        dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
+        .on('start', () => console.log('song started'))
+        .on('finish', () => next())
+    }
+
+    if (!optionalIdx)
+        connection.play(await ytdl(queue[currentIdx].url), audioOpts)
+        .on('start', () => console.log('song started'))
+        .on('finish', () => next())
+
+
 }
 
 async function pause() {
