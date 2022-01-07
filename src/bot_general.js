@@ -1,70 +1,46 @@
 
-const { Client, MessageEmbed } = require('discord.js');
-const { playAudioFile, type } = require('./commands');
-const { getByGenre } = require('./endpoints/anime');
-const { getCocktailContaining, getCocktailByName } = require('./endpoints/drinks');
-const { SOUNDS, GENRES } = require('./constants');
+const { Client } = require('discord.js');
+const { playAudio } = require('./commands/audio');
+const { existsSync, readdirSync } = require('fs');
+const { basename } = require('path')
+const { searchDrink, searchStore } = require('./commands/drinks.js');
 
-const bot_1 = new Client();
+const client = new Client();
 const prefix = '!';
+const pathToAudios = "../sounds";
+const audios = existsSync(pathToAudios) ? 
+    readdirSync(pathToAudios)
+    .filter(fileName => fileName.includes('.mp3')) 
+    .map(fileName => basename(fileName, '.mp3')) : null;
 
-bot_1.login(process.env.PROD_TOKEN_1);
-bot_1.on('ready', () => {
-    console.log("Bot 1 successfully connected.");
-})
+client.login(process.env.GENERAL_BOT);
+client.on('ready', () => {
+    console.log("General Bot successfully connected.");
+});
 
-bot_1.on('message', (msg) => {
+
+client.on('message', (msg) => {
     if (msg.author.bot) return;
     if (!msg.content.startsWith(prefix)) return;
 
     const args = msg.content.slice(prefix.length).trim().split(/ +/g);
-    
     const command = args.shift().toLowerCase();
 
-    if (command === 'anime') {
-        const genre = GENRES.find(genre => genre.key === args[0]);
-        if (!genre)
-            return;
-        getByGenre(command, genre.value, msg)
-            .then((url) => type(msg, url))
+    switch(command) {
+        case 'search': 
+            searchDrink(args, msg.channel);
+            break;
+        
+        case 'locate': 
+            searchStore(args, msg.channel);
+            break;
+        
+        default:
+            const audio = audios.find(audio => audio === command);
+            if (audio) 
+                playAudio(msg, `${pathToAudios}/${audio}.mp3`);
+            break;
     }
 
-    else if (command === 'contains') {
-        getCocktailContaining(args.join(' '))
-            .then(cocktail => {
-                embedMsg(cocktail, msg)
-            })
-    }
-    else if (command === 'cocktail') {
-        getCocktailByName(args.join(' '))
-            .then((cocktail) => {
-                embedMsg(cocktail, msg)
-            })
-    }
-    else {
-        let audio = SOUNDS.find(audio => audio.key === command);
-        if (audio) {
-            playAudioFile(msg, audio.filePath);
-        }
-    }
-
-    function embedMsg(cocktail, msg) {
-        let s = '';
-        cocktail.ingredients.forEach(ingredient => {
-            s += `  - ${ingredient.amount ? ingredient.amount : ''} of ${ingredient.name}\n`
-        })
-        const embed = new MessageEmbed()
-            .setTitle('Drink')
-            .setColor('#DAF7A6')
-            .setThumbnail(cocktail.thumb)
-            .setDescription(
-                `
-                    Name: ${cocktail.name}\n
-                    Glass: ${cocktail.glass_type}\n
-                    Ingredients:\n
-                    ${s}
-                `
-            )
-        msg.channel.send(embed);
-    }
+    
 })

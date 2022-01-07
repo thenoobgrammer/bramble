@@ -13,14 +13,31 @@ resource_types:
 
 resources:
 - name: repo
+  type: git
+  icon: github
+  source:
+    uri: ((git-src-uri))
+    branch: master
+    private_key: ((git-private-key))
+
+- name: tasks
   check_every: 2m
   type: git
   icon: github
   source:
-    uri: ((git-uri))
-    branch: ((git-branch))
+    uri: ((git-tasks-uri))
+    branch: master
     private_key: ((git-private-key))
-    
+
+- name: configs
+  check_every: 2m
+  type: git
+  icon: github
+  source:
+    uri: ((git-configs-uri))
+    branch: master
+    private_key: ((git-private-key))
+
 - name: my-bucket
   type: s3-bucket
   icon: aws
@@ -31,30 +48,21 @@ resources:
     secret_access_key: ((secret_access_key))  
     region_name: ((region_name))
 
-# - name: node-image
-#   type: registry-image
-#   source:
-#     repository: node
-#     tag: 13.10.1-stretch
 
 jobs:
 - name: deploy-to-bucket
-  public: true
+  serial: true
   plan:
   - get: repo 
-    trigger: true
+  - get: configs
   - put: my-bucket
-  # - task: install
-  #   image: node-image
-  #   config:
-  #     inputs:
-  #     - name: repo
-  #     outputs:
-  #     - name: dependencies
-  #       path: repo/node_modules
-  #     platform: linux
-  #     run:
-  #       path: npm
-  #       args: ["install"]
-  #       dir: repo
-  # - task: extract
+
+- name: release
+  plan: 
+  - get: repo
+  - get: tasks
+  - get: configs
+    passed: [deploy-to-bucket]
+  - task: connect-to-ec2
+    file: tasks/connect_ec2.yml
+

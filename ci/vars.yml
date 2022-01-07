@@ -1,5 +1,6 @@
-git-uri: git@github.com:thenoobgrammer/discord_bot.git
-git-branch: master
+git-src-uri: git@github.com:thenoobgrammer/discord_bot.git
+git-tasks-uri: git@github.com:thenoobgrammer/tasks.git
+git-configs-uri: git@github.com:thenoobgrammer/configs.git
 git-private-key: |
   -----BEGIN OPENSSH PRIVATE KEY-----
   b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn

@@ -16,4 +16,6 @@ class QueueManager {
     }
 
 }
-module.exports = QueueManager;
+module.exports = {
+    QueueManager
+};

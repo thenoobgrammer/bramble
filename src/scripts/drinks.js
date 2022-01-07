@@ -1,13 +1,16 @@
 const cheerio = require('cheerio');
 const axios = require("axios");
-const db = require('../db.js');
+const puppeteer = require('puppeteer');
+const { insertMany } = require('../db/global-operations.js');
 
-const URL = `https://www.saq.com/en/products`;
+const URL = `https://www.saq.com/en`;
 const REGEX_SPACE_TRIM = /\s+/g;
 const DIVIDER = '|';
 
 var MAX_VIEW_PER_PAGE = 96;
 var MAX_PAGE = 120;
+
+
 
 // async function init() {
 // 	console.log('init')
@@ -31,7 +34,7 @@ async function loadDataIntoDb() {
 	for (let page = 1; page <= MAX_PAGE; page++) {
 		console.log(page)
 		await axios
-			.get(`${URL}?p=${page}&product_list_limit=${MAX_VIEW_PER_PAGE}`)
+			.get(`${URL}/products?p=${page}&product_list_limit=${MAX_VIEW_PER_PAGE}`)
 			.then((response) => {
 				const $ = cheerio.load(response.data);
 				const listDrinks = $('li.item.product.product-item');
@@ -53,51 +56,95 @@ async function loadDataIntoDb() {
 				});
 			});
 	};
-	//console.log('End')
-	db.insertMany('drinks', list);
-	db.close();
+	insertMany(process, env.COLLECTION_DRINKS, list);
 }
 
-async function getMaxViewPerPage() {
-	let viewPerPages = [];
+async function detail(id) {
+	const browser = await puppeteer.launch();
+	const context = browser.defaultBrowserContext();
+	const page = await browser.newPage();
 
-	await axios
-		.get(`${URL}`)
-		.then((response) => {
-			const $ = cheerio.load(response.data);
-			const options = $('#limiter-bottom option');
-			options.each((idx, el) => {
-				let value = $(el).attr('value').replace(REGEX_SPACE_TRIM, " ");
-				viewPerPages.push(parseInt(value));
-			});
-		});
+	await context.overridePermissions(`${URL}/${id}`, ['geolocation']);
+	await page.setGeolocation({ latitude: 45.508888, longitude: -73.561668 })
+	await page.goto(`${URL}/${id}`);
 
-	return viewPerPages[viewPerPages.length - 1];
-}
+	let btn = await page.$('#product_addtocart_form > div > div > div.available-in-store > div.wrapper-more-availability > div > button');
+	await btn.click();
 
-async function getMaxPage() {
-	let maxPage = 0;
-	await axios
-		.get(`${URL}?product_list_limit=${MAX_VIEW_PER_PAGE}`)
-		.then((response) => {
-			const $ = cheerio.load(response.data);
-			const span = $('.toolbar-amount span')[2];
-			const resultStr = $(span).text().replace(REGEX_SPACE_TRIM, " ");
-			const resultNbr = parseInt(resultStr);
-			return resultNbr;
+	const selectorForLoadMoreButton = '#off-canvas-instore > div.wrapper-store > div > div > div.list-map-container > div > div.list-footer > div > div.action-toolbar.pagination > button'
+	
+	let loadMoreVisible = await isElementVisible(page, selectorForLoadMoreButton);
+	while (loadMoreVisible) {
+		await page
+			.click(selectorForLoadMoreButton)
+			.catch(() => { });
+		loadMoreVisible = await isElementVisible(page, selectorForLoadMoreButton);
+	}
+
+	const list = await page.$$eval('#off-canvas-instore > div.wrapper-store > div > div > div.list-map-container > div > ul > li > div',
+		els => els.map(el => {
+			const obj = {
+				storeName: el.querySelector('h4').textContent,
+				available: el.querySelector('strong').textContent
+			}
+			return obj;
 		})
-		.then((result) => {
-			maxPage = Math.ceil(result / MAX_VIEW_PER_PAGE);
-		});
+	);
+	
+	browser.close();
 
-	return maxPage;
+	return list;
+}
+
+async function isElementVisible(page, cssSelector) {
+	let visible = true;
+	await page
+		.waitForSelector(cssSelector, { visible: true, timeout: 2000 })
+		.catch(() => {
+			visible = false;
+		});
+	return visible;
 };
 
 module.exports = {
 	loadDataIntoDb,
-	//init
+	detail
 };
 
+
+// async function getMaxViewPerPage() {
+// 	let viewPerPages = [];
+// 	await axios
+// 		.get(`${URL}`)
+// 		.then((response) => {
+// 			const $ = cheerio.load(response.data);
+// 			const options = $('#limiter-bottom option');
+// 			options.each((idx, el) => {
+// 				let value = $(el).attr('value').replace(REGEX_SPACE_TRIM, " ");
+// 				viewPerPages.push(parseInt(value));
+// 			});
+// 		});
+
+// 	return viewPerPages[viewPerPages.length - 1];
+// }
+
+// async function getMaxPage() {
+// 	let maxPage = 0;
+// 	await axios
+// 		.get(`${URL}?product_list_limit=${MAX_VIEW_PER_PAGE}`)
+// 		.then((response) => {
+// 			const $ = cheerio.load(response.data);
+// 			const span = $('.toolbar-amount span')[2];
+// 			const resultStr = $(span).text().replace(REGEX_SPACE_TRIM, " ");
+// 			const resultNbr = parseInt(resultStr);
+// 			return resultNbr;
+// 		})
+// 		.then((result) => {
+// 			maxPage = Math.ceil(result / MAX_VIEW_PER_PAGE);
+// 		});
+
+// 	return maxPage;
+// };
 
 
 
