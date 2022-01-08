@@ -32,14 +32,24 @@ async function play(optionalIdx) {
             return;
         currentIdx = optionalIdx - 1;
         dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
-            .on('start', () => console.log('song started'))
-            .on('finish', () => next())
+            .on('start', () => {
+                queue[currentIdx].playing = true;
+            })
+            .on('finish', () => {
+                queue[currentIdx].playing = false;
+                next()
+            })
     }
 
     if (!optionalIdx)
         dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
-            .on('start', () => console.log('song started'))
-            .on('finish', () => next())
+            .on('start', () => {
+                queue[currentIdx].playing = true;
+            })
+            .on('finish', () => {
+                queue[currentIdx].playing = false;
+                next()
+            })
 }
 
 async function resume() {
@@ -74,7 +84,7 @@ async function seeQueue(channel) {
         .setTitle(`Current queue`)
         .setColor('#008369')
         .setDescription(queue.map((song, idx) => {
-            if (idx === currentIdx)
+            if (song.playing)
                 return `\`\`\`yaml\n${idx + 1}. ${song.title}\`\`\``;
             return `${idx + 1}. ${song.title}`;
         }))
