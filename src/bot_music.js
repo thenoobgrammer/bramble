@@ -26,7 +26,7 @@ client.on('message', (msg) => {
         search(args.join(' '))
             .then(result => music.addToQueue(result));
 
-    if (command === 'skip') music.play(args.join(' '))
+    if (command === 'skip') music.skip(args.join(' '))
 
     if (command === 'resume') music.resume()
 

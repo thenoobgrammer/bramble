@@ -52,6 +52,11 @@ async function play(optionalIdx) {
             })
 }
 
+async function resume(idxSkiopTo) {
+    queue[currentIdx].playing = false;
+    play(idxSkiopTo);
+}
+
 async function resume() {
     dispatcher.resume();
 }
