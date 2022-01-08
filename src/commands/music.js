@@ -1,6 +1,18 @@
 const ytdl = require('ytdl-core-discord');
 const { MessageEmbed } = require('discord.js');
 const defaultVolume = 0.5;
+const commands = [
+    { name: 'play', value: 'Plays first video from Youtube search', inline: false},
+    { name: 'pause', value: 'Pause music', inline: false},
+    { name: 'resume', value: 'Resume music', inline: false},
+    { name: 'skip - The position of the song', value: 'Skip to a song in the queue', inline: false},
+    { name: 'next', value: 'Play next music in the queue', inline: false},
+    { name: 'prev', value: 'Play previous song in the queue', inline: false},
+    { name: 'vol - 0 to 1', value: 'Adjust volume of music', inline: false},
+    { name: 'rm - Position of song in the queue', value: 'Remove song from queue', inline: false},
+    { name: 'q', value: 'Display the current queue', inline: false},
+    { name: 'mhelp', value: 'Help list', inline: false},
+];
 
 let connection = null;
 let dispatcher = null;
@@ -100,9 +112,8 @@ async function displayHelp(channel) {
     const embed = new MessageEmbed()
         .setTitle(`Here are the commands for the music Bot`)
         .setColor('#7A2F8F')
-        .setDescription(`Every command is prefixed with a ! :
-            \`\`\`play 'Your music' - Will be added to the queue\nnext - Will play the next music in queue\nprevious - Will play previous music in queue\nqueue - See the current queue\ncurr '3' - Will play the 3rd music in the queue\`\`\` 
-        `);
+        .setDescription(``)
+        .addFields(commands)
     channel.send(embed);
 }
 
