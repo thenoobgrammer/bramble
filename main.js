@@ -1,15 +1,13 @@
 require('dotenv').config();
 require("chromedriver")
-require('./src/bot_general.js');
-require('./src/bot_music.js');
+require('./src/bot.js');
+
 const express = require('express');
-const { search } = require('./src/db/collections/drinks.js');
 const { dropCollection, createCollection } = require('./src/db/global-operations.js');
 const { loadDataIntoDb, detail } = require('./src/scripts/drinks.js');
 const app = express();
 
 app.use(function (req, res, next) {
-    console.log(req.method, req.path);
     next();
 });
 

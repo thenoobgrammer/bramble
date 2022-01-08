@@ -19,16 +19,20 @@ let dispatcher = null;
 let currentIdx = 0;
 let queue = [];
 
-async function setConnection(incomingConnection) {
+//Sets the connection
+function setConnection(incomingConnection) {
     connection = incomingConnection;
 }
 
-async function addToQueue(songData) {
+//Add new song to queue list
+function addToQueue(songData) {
     queue.push(songData);
     if (queue.length === 1)
         play()
 }
 
+//Plays an audio. 
+//OptionalIdx is passed as optional. Can be without.
 async function play(optionalIdx) {
     const audioOpts = {
         type: 'opus',
@@ -64,24 +68,30 @@ async function play(optionalIdx) {
             })
 }
 
+//Skip to a specific index in the queue list
 async function skip(idxSkiopTo) {
     queue[currentIdx].playing = false;
     play(idxSkiopTo);
 }
 
+
+//Resumes song
 async function resume() {
     dispatcher.resume();
 }
 
+//Pauses song
 async function pause() {
     dispatcher.pause()
 }
 
+//PLays next song in queue
 async function next() {
     currentIdx = currentIdx >= queue.length - 1 ? 1 : currentIdx + 1;
     play();
 }
 
+//Removes song from queue list
 async function remove(idx) {
     if (idx > 0 && idx <= queue.length) {
         queue.splice(idx - 1, 1);
@@ -89,15 +99,19 @@ async function remove(idx) {
     }
 }
 
+
+//Plays previous song
 async function previous() {
     currentIdx = currentIdx <= 0 ? currentIdx : currentIdx - 1;
     play();
 }
 
+//Sets the volume
 async function volume(connection, volume) {
     connection.setVolume(volume < 0 ? 0 : volume);
 }
 
+//Checks queue
 async function seeQueue(channel) {
     const embed = new MessageEmbed()
         .setTitle(`Current queue`)
@@ -110,11 +124,11 @@ async function seeQueue(channel) {
     channel.send(embed);
 }
 
+//Displays commands for music
 async function displayHelp(channel) {
     const embed = new MessageEmbed()
         .setTitle(`Here are the commands for the music Bot`)
         .setColor('#7A2F8F')
-        .setDescription(``)
         .addFields(commands)
     channel.send(embed);
 }
