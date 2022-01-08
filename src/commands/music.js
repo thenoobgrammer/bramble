@@ -51,7 +51,7 @@ async function pause() {
 }
 
 async function next() {
-    currentIdx = currentIdx >= queue.length - 1 ? currentIdx : currentIdx + 1;
+    currentIdx = currentIdx >= queue.length - 1 ? 1 : currentIdx + 1;
     play();
 }
 

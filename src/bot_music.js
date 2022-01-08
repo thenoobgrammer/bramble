@@ -3,7 +3,6 @@ const ytsr = require('ytsr');
 const music = require('./commands/music');
 const client = new Client();
 const prefix = '!';
-//const URL_MATCH = '^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$';
 
 client.login(process.env.MUSIC_BOT);
 client.on('ready', () => {
@@ -41,7 +40,7 @@ client.on('message', (msg) => {
 
     if (command === 'rm') music.remove(args.join(' '));
 
-    if (command === 'queue') music.seeQueue(msg.channel);
+    if (command === 'q') music.seeQueue(msg.channel);
 
     if (command === 'mhelp') music.displayHelp(msg.channel);
 
