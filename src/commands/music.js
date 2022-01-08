@@ -3,8 +3,9 @@ const { MessageEmbed } = require('discord.js');
 const defaultVolume = 0.5;
 
 let connection = null;
-let queue = [];
+let dispatcher = null;
 let currentIdx = 0;
+let queue = [];
 
 async function setConnection(incomingConnection) {
     connection = incomingConnection;
@@ -26,31 +27,37 @@ async function play(optionalIdx) {
         encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
 
-    let dispatcher = null;
-
     if (optionalIdx && optionalIdx - 1 >= 0 && optionalIdx - 1 < queue.length) {
-        if(optionalIdx-1 === currentIdx)
+        if (optionalIdx - 1 === currentIdx)
             return;
         currentIdx = optionalIdx - 1;
         dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
-        .on('start', () => console.log('song started'))
-        .on('finish', () => next())
+            .on('start', () => console.log('song started'))
+            .on('finish', () => next())
     }
 
     if (!optionalIdx)
-        connection.play(await ytdl(queue[currentIdx].url), audioOpts)
-        .on('start', () => console.log('song started'))
-        .on('finish', () => next())
+        dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
+            .on('start', () => console.log('song started'))
+            .on('finish', () => next())
+}
 
-
+async function resume() {
+    dispatcher.resume();
 }
 
 async function pause() {
+    dispatcher.pause()
 }
 
 async function next() {
     currentIdx = currentIdx >= queue.length - 1 ? currentIdx : currentIdx + 1;
     play();
+}
+
+async function remove(idx) {
+    if (idx > 0 && idx <= queue.length)
+        queue.splice(idx - 1, 1);
 }
 
 async function previous() {
@@ -74,13 +81,26 @@ async function seeQueue(channel) {
     channel.send(embed);
 }
 
+async function displayHelp(channel) {
+    const embed = new MessageEmbed()
+        .setTitle(`Here are the commands for the music Bot`)
+        .setColor('#7A2F8F')
+        .setDescription(`Every command is prefixed with a ! :
+            \`\`\`play 'Your music' - Will be added to the queue\nnext - Will play the next music in queue\nprevious - Will play previous music in queue\nqueue - See the current queue\ncurr '3' - Will play the 3rd music in the queue\`\`\` 
+        `);
+    channel.send(embed);
+}
+
 module.exports = {
     addToQueue,
     play,
     pause,
+    resume,
     next,
     previous,
     volume,
+    remove,
     setConnection,
-    seeQueue
+    seeQueue,
+    displayHelp
 }
