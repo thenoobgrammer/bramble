@@ -52,7 +52,7 @@ async function play(optionalIdx) {
             })
 }
 
-async function resume(idxSkiopTo) {
+async function skip(idxSkiopTo) {
     queue[currentIdx].playing = false;
     play(idxSkiopTo);
 }
@@ -109,6 +109,7 @@ async function displayHelp(channel) {
 module.exports = {
     addToQueue,
     play,
+    skip,
     pause,
     resume,
     next,
