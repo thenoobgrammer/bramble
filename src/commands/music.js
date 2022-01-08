@@ -40,7 +40,7 @@ async function play(optionalIdx) {
     };
 
     if (optionalIdx && optionalIdx - 1 >= 0 && optionalIdx - 1 < queue.length) {
-        if (optionalIdx - 1 === currentIdx)
+        if (optionalIdx - 1 === currentIdx && queue[currentIdx].playing)
             return;
         currentIdx = optionalIdx - 1;
         dispatcher = connection.play(await ytdl(queue[currentIdx].url), audioOpts)
@@ -83,8 +83,10 @@ async function next() {
 }
 
 async function remove(idx) {
-    if (idx > 0 && idx <= queue.length)
+    if (idx > 0 && idx <= queue.length) {
         queue.splice(idx - 1, 1);
+        currentIdx = currentIdx === 0 ? currentIdx : currentIdx - 1;
+    }
 }
 
 async function previous() {
