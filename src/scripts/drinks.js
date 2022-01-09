@@ -56,7 +56,7 @@ async function loadDataIntoDb() {
 				});
 			});
 	};
-	insertMany(process, env.COLLECTION_DRINKS, list);
+	insertMany(process.env.COLLECTION_DRINKS, list);
 }
 
 async function detail(id) {

@@ -7,9 +7,7 @@ async function getCocktailContaining(ingredient) {
 
     let drinks = response.data.drinks;
     let rand = Math.floor(Math.random() * drinks.length);
-
     return drinkById(drinks[rand].idDrink);
-
 }
 
 async function getCocktailByName(name) {
@@ -19,7 +17,7 @@ async function getCocktailByName(name) {
     
     let drinks = response.data.drinks;
     let rand = Math.floor(Math.random() * drinks.length);
-    return drinkDetail(drinks[rand]);//drinks[rand];
+    return drinkDetail(drinks[rand]);
 }
 
 async function drinkById(id) {
