@@ -4,7 +4,6 @@ async function playAudio(msg, path) {
     const vChannel = msg.member.voice.channel;
     await vChannel.join()
         .then(connection => {
-            console.log(connection.status)
             connection.play(path, { seek: 0, volume: 0.5 });
         });
 }

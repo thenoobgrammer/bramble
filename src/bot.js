@@ -31,12 +31,12 @@ client.on('message', (msg) => {
     const args = msg.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    if (command === 'search') drinks.searchDrink(args, msg.channel)
+    //if (command === 'search') drinks.searchDrink(args, msg.channel)
 
-    if (command === 'locate') drinks.searchStore(args, msg.channel);
+    //if (command === 'locate') drinks.searchStore(args, msg.channel);
 
     if (command === 'play')
-        search(args.join(' '))
+        search(args.join(' '), msg.author.username)
             .then(result => music.addToQueue(result));
 
     if (command === 'skip') music.skip(args.join(' '))
@@ -53,23 +53,26 @@ client.on('message', (msg) => {
 
     if (command === 'rm') music.remove(args.join(' '));
 
+    if (command === 'clr') music.clear(args.join(' '));
+
     if (command === 'q') music.seeQueue(msg.channel);
 
     if (command === 'mhelp') music.displayHelp(msg.channel);
 
-    if (command === 'ahelp') audio.displayAudioHelp(msg.channel, audios.map(a => { return { name: a, value: a, inline: false } }));
+    //if (command === 'ahelp') audio.displayAudioHelp(msg.channel, audios.map(a => { return { name: a, value: a, inline: false } }));
 
-    const a = audios.find(x => x === command);
+    // const a = audios.find(x => x === command);
 
-    if (a)
-        audio.playAudio(msg, `${pathToAudios}/${a}.mp3`);
+    // if (a)
+    //     audio.playAudio(msg, `${pathToAudios}/${a}.mp3`);
 
-    async function search(query) {
+    async function search(query, author) {
         const result = await ytsr(query);
         const songInfo = result.items.filter(x => x.type === 'video')[0];
         return {
             title: songInfo.title,
             url: songInfo.url,
+            author: author,
             playing: false
         };
     };
