@@ -7,6 +7,8 @@ const { dropCollection, createCollection } = require('./src/db/global-operations
 const { loadDataIntoDb, detail } = require('./src/scripts/drinks.js');
 const app = express();
 
+console.log(process.env.MONGO_URI,process.env.DB_NAME,process.env.COLLECTION_DRINKS,process.env.COLLECTION_ANIMES)
+
 app.use(function (req, res, next) {
     next();
 });

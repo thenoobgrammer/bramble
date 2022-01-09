@@ -30,7 +30,6 @@ var MAX_PAGE = 120;
 async function loadDataIntoDb() {
 	let list = [];
 	for (let page = 1; page <= MAX_PAGE; page++) {
-		console.log(page)
 		await axios
 			.get(`${URL}/products?p=${page}&product_list_limit=${MAX_VIEW_PER_PAGE}`)
 			.then((response) => {
