@@ -10,8 +10,6 @@ const DIVIDER = '|';
 var MAX_VIEW_PER_PAGE = 96;
 var MAX_PAGE = 120;
 
-
-
 // async function init() {
 // 	console.log('init')
 // 	return await axios
