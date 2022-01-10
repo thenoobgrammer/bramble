@@ -4,7 +4,6 @@ const ytdl = require('ytdl-core');
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/song';
 
-const defaultVolume: Number = 0.5;
 const commands: EmbedFieldData[] = [
     { name: 'play', value: 'Plays first video from Youtube search', inline: false },
     { name: 'pause', value: 'Pause music', inline: false },
@@ -19,6 +18,7 @@ const commands: EmbedFieldData[] = [
     { name: 'mhelp', value: 'Help list', inline: false },
 ];
 
+let currentVolume: number;
 let currentSongPlaying: Song;
 let connection: VoiceConnection;
 let dispatcher: StreamDispatcher;
@@ -42,6 +42,7 @@ async function play(idx: number): Promise<void> {
     const audioOpts = {
         type: 'opus',
         fmt: 'mp3',
+        defaultVolume: currentVolume,
         highWaterMark: 1,
         filter: 'audioonly',
         encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
@@ -136,7 +137,8 @@ function clear(): void {
 
 //Sets the volume
 function volume(volume: number): void {
-    dispatcher.setVolume(volume < 0 ? 0 : volume);
+    currentVolume = volume < 0 ? 0 : volume
+    dispatcher.setVolume(currentVolume);
 }
 
 //Checks queue
