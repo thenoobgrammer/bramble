@@ -1,7 +1,7 @@
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 
-import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, StreamOptions, TextChannel, VoiceConnection } from 'discord.js';
+import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/song';
 
 const defaultVolume: Number = 0.5;
@@ -46,21 +46,15 @@ async function play(idx: number): Promise<void> {
         filter: 'audioonly',
         encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
-    const streamOpts = { quality: "highestaudio", filter: "audioonly", highWaterMark: 1 << 25 };
-    // const downloadOpts: downloadOptions = {
-    //     filter: 'audioonly',
-    // };
+
     if (idx === undefined || idx === null)
         return;
-    // let info = await ytdl.getInfo(ytdl.getURLVideoID('http://www.youtube.com/watch?v=aqz-KE-bpKQ'));
-    // let format = ytdl.chooseFormat(info.formats, 'audioonly');
-    // console.log('Formats with only audio: ' + JSON.stringify(format));
+
     dispatcher = connection.play(await ytdl(queue[idx].url, audioOpts))
         .on('start', () => {
             queue[idx].isPlaying = true;
         })
         .on('finish', () => {
-            queue[idx].isPlaying = false;
             next()
         })
         .on('error', console.error);
