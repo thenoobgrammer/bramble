@@ -1,4 +1,4 @@
-import { Client, VoiceChannel, Constants } from 'discord.js'
+import { Client, VoiceChannel } from 'discord.js'
 import { existsSync, readdirSync } from 'fs';
 import { basename } from 'path';
 import { Song } from './model/song';
@@ -14,10 +14,10 @@ const token: string = process.env.BOT_TOKEN as string
 const bot: Client = new Client();
 const prefix: string = '!';
 const pathToAudios: string = "../sounds";
-const audios = existsSync(pathToAudios) ?
-    readdirSync(pathToAudios)
-        .filter(fileName => fileName.includes('.mp3'))
-        .map(fileName => basename(fileName, '.mp3')) : null;
+// const audios = existsSync(pathToAudios) ?
+//     readdirSync(pathToAudios)
+//         .filter(fileName => fileName.includes('.mp3'))
+//         .map(fileName => basename(fileName, '.mp3')) : null;
 
 bot.login(token);
 bot.on('ready', () => {
@@ -41,7 +41,6 @@ bot.on('message', (msg) => {
 
     const command = args.shift()?.toLowerCase();
 
-    console.log(command)
     //if (command === 'search') drinks.searchDrink(args, msg.channel)
 
     //if (command === 'locate') drinks.searchStore(args, msg.channel);

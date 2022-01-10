@@ -38,15 +38,17 @@ function addToQueue(song: Song): void {
 //Plays an audio. 
 //OptionalIdx is passed as optional. Can be without.
 async function play(idx: number): Promise<void> {
-    const audioOpts: ytdlcore.downloadOptions = {
-        quality: 'highest',
+    const audioOpts = {
+        type: 'opus',
+        fmt: 'mp3',
         highWaterMark: 1,
-        filter: 'audioonly'
+        filter: 'audioonly',
+        encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
     if (idx === undefined || idx === null)
         return;
-
-    dispatcher = connection.play(await ytdl(queue[idx].url), audioOpts)
+        
+    dispatcher = connection.play(await ytdl(queue[idx].url), { type: 'opus', })
         .on('start', () => {
             queue[idx].isPlaying = true;
         })
@@ -55,6 +57,7 @@ async function play(idx: number): Promise<void> {
             next()
         })
         .on('error', console.error);
+    console.log(dispatcher)
 }
 
 //Skip to a specific index in the queue list
@@ -82,7 +85,7 @@ function pause(): void {
 }
 
 function stop(): void {
-    dispatcher.destroy();
+    dispatcher.end();
 }
 
 //PLays next song in queue
@@ -119,7 +122,7 @@ function remove(songIdx: number): void {
     const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
 
     if(songIdx === currentPlayingIdx) {
-        dispatcher.destroy();
+        dispatcher.end();
     }
 
     queue.splice(songIdx, 1);
@@ -127,7 +130,7 @@ function remove(songIdx: number): void {
 
 //Clears the current queue
 function clear(): void {
-    dispatcher.destroy();
+    dispatcher.end();
     queue = [];
 }
 
