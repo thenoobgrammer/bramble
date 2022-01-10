@@ -1,6 +1,6 @@
 require('dotenv').config();
 require("chromedriver")
-require('./src/bot.js');
+require('./src/bot.ts');
 
 const express = require('express');
 const { dropCollection, createCollection } = require('./src/db/global-operations.js');
