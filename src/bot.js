@@ -2,20 +2,23 @@ const { Client } = require('discord.js')
 const { existsSync, readdirSync } = require('fs');
 const { basename } = require('path')
 const ytsr = require('ytsr');
-const audio = require('./commands/audio');
+const bot = new Client();
 const music = require('./commands/music');
-const drinks = require('./commands/drinks');
-const client = new Client();
 const prefix = '!';
 const pathToAudios = "../sounds";
+const drinks = require('./commands/drinks');
+const audio = require('./commands/audio');
 const audios = existsSync(pathToAudios) ?
     readdirSync(pathToAudios)
         .filter(fileName => fileName.includes('.mp3'))
         .map(fileName => basename(fileName, '.mp3')) : null;
 
-client.login(process.env.MUSIC_BOT);
-client.on('ready', () => {
-    const vChannel = client.channels.cache.get(process.env.MUSIC_CHANNEL_ID);
+const channel_id = process.env.CHANNEL_ID;
+const token = process.env.BOT_TOKEN;
+
+bot.login(token);
+bot.on('ready', () => {
+    const vChannel = bot.channels.cache.get(channel_id);
     vChannel.join().then(connection => {
         music.setConnection(connection);
         console.log("Music Bot successfully connected.");
@@ -24,7 +27,7 @@ client.on('ready', () => {
     });
 })
 
-client.on('message', (msg) => {
+bot.on('message', (msg) => {
     if (msg.author.bot) return;
     if (!msg.content.startsWith(prefix)) return;
 
@@ -73,7 +76,7 @@ client.on('message', (msg) => {
             title: songInfo.title,
             url: songInfo.url,
             author: author,
-            playing: false
+            isPlaying: false
         };
     };
 });

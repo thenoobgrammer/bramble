@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core-discord');
+const ytdl = require('ytdl-core');
 const { MessageEmbed } = require('discord.js');
 const defaultVolume = 0.5;
 const commands = [
@@ -27,100 +27,101 @@ function setConnection(incomingConnection) {
 //Add new song to queue list
 function addToQueue(songData) {
     queue.push(songData);
-    if (queue.length === 1)
-        play(0)
+    if (queue.length === 1) play(0)
+}
+
+//Skip to a specific index in the queue list
+function skip(songIdx) {
+    songIdx--;
+
+    const currPlayingIdx = queue.findIndex(x => x.isPlaying);
+
+    if (queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1 || songIdx === currPlayingIdx || currentSongPlaying === queue[songIdx]) return;
+
+    queue[currPlayingIdx].isPlaying = false;
+    play(songIdx);
+}
+
+
+//Resumes song
+function resume() {
+    dispatcher.resume();
+}
+
+//Pauses song
+function pause() {
+    dispatcher.pause()
+}
+
+//Clears the current queue
+function clear() {
+    queue = [];
+    dispatcher.destroy();
 }
 
 //Plays an audio. 
 //OptionalIdx is passed as optional. Can be without.
 async function play(idx) {
     const audioOpts = {
-        type: 'opus',
-        fmt: 'mp3',
-        volume: defaultVolume,
-        highWaterMark: 1,
-        filter: 'audioonly',
-        encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
+        type: 'opus'
+        // fmt: 'mp3',
+        // volume: defaultVolume,
+        // highWaterMark: 1,
+        // filter: 'audioonly',
+        // encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
-    if (idx === undefined || idx === null)
-        return;
 
-    dispatcher = connection.play(await ytdl(queue[idx].url), audioOpts)
+    if (idx === undefined || idx === null) return;
+
+    dispatcher = connection.play(await ytdl(queue[idx].url, { opusEncoded: true }), audioOpts)
         .on('start', () => {
-            queue[idx].playing = true;
+            queue[idx].isPlaying = true;
         })
         .on('finish', () => {
-            queue[idx].playing = false;
+            queue[idx].isPlaying = false;
             next()
         })
         .on('error', console.error);
 }
 
-//Skip to a specific index in the queue list
-async function skip(songIdx) {
-    songIdx--;
-
-    const currPlayingIdx = queue.findIndex(x => x.playing);
-
-    if (!queue || queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1 || songIdx === currPlayingIdx)
-        return;
-
-    queue[currPlayingIdx].playing = false;
-    play(songIdx);
-}
-
-
-//Resumes song
-async function resume() {
-    dispatcher.resume();
-}
-
-//Pauses song
-async function pause() {
-    dispatcher.pause()
-}
-
 //PLays next song in queue
 async function next() {
-    if (!queue || queue.length === 0)
-        return;
+    if (!queue || queue.length === 0) return;
 
-    const currPlayingIdx = queue.findIndex(x => x.playing);
-    let nextIdx = (queue.length === 1 || currPlayingIdx + 1 > queue.length - 1) ? 0 : currPlayingIdx + 1;
+    const currPlayingIdx = queue.findIndex(x => x.isPlaying);
+    let nextIdx = (queue.length === 1 || currPlayingIdx === queue.length - 1) ? 0 : currPlayingIdx + 1;
 
-    queue[currPlayingIdx].playing = false;
+    queue[currPlayingIdx].isPlaying = false;
     play(nextIdx);
+}
+
+//Plays previous song
+function previous() {
+    if (!queue || queue.length === 0) return;
+
+    const currPlayingIdx = queue.findIndex(x => x.isPlaying);
+    let prevIdx = (queue.length === 1 || currPlayingIdx === 0) ? queue.length - 1 : currPlayingIdx - 1;
+
+    queue[currPlayingIdx].isPlaying = false;
+    play(prevIdx);
 }
 
 //Removes song from queue list
 async function remove(songIdx) {
     songIdx--;
-    if (!queue || queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1)
-        return;
+    if (queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1) return;
+
+    const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
+
+    if (songIdx === currentPlayingIdx) dispatcher.end();
 
     queue.splice(songIdx, 1);
 }
 
-//Clears the current queue
-async function clear() {
-    queue = [];
-}
-
-//Plays previous song
-async function previous() {
-    if (!queue || queue.length === 0)
-        return;
-
-    const currPlayingIdx = queue.findIndex(x => x.playing);
-    let prevIdx = (queue.length === 1 || currPlayingIdx - 1 < 0) ? 0 : currPlayingIdx - 1;
-
-    queue[currPlayingIdx].playing = false;
-    play(prevIdx);
-}
 
 //Sets the volume
 async function volume(volume) {
-    dispatcher.setVolume(volume < 0 ? 0 : volume);
+    await dispatcher.setVolume(volume < 0 ? 0 : volume);
 }
 
 //Checks queue
@@ -129,11 +130,11 @@ async function seeQueue(channel) {
         .setTitle(`Current queue`)
         .setColor('#008369')
         .setDescription(queue.map((song, idx) => {
-            if (song.playing)
+            if (song.isPlaying)
                 return `\`\`\`yaml\n${idx + 1}. ${song.title} (Req by. ${song.author})\`\`\``;
             return `${idx + 1}. ${song.title} (Req by. ${song.author})`;
         }))
-    channel.send(embed);
+    await channel.send(embed);
 }
 
 //Displays commands for music
@@ -142,7 +143,7 @@ async function displayHelp(channel) {
         .setTitle(`Here are the commands for the music Bot`)
         .setColor('#7A2F8F')
         .addFields(commands)
-    channel.send(embed);
+    await channel.send(embed);
 }
 
 module.exports = {
