@@ -1,10 +1,11 @@
-import ytdl from 'ytdl-core-discord';
-import ytdlcore from 'ytdl-core';
-import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
+const fs = require('fs');
+const ytdl = require('ytdl-core');
+
+import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, StreamOptions, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/song';
 
 const defaultVolume: Number = 0.5;
-const commands: EmbedFieldData [] = [
+const commands: EmbedFieldData[] = [
     { name: 'play', value: 'Plays first video from Youtube search', inline: false },
     { name: 'pause', value: 'Pause music', inline: false },
     { name: 'resume', value: 'Resume music', inline: false },
@@ -21,7 +22,7 @@ const commands: EmbedFieldData [] = [
 let currentSongPlaying: Song;
 let connection: VoiceConnection;
 let dispatcher: StreamDispatcher;
-let queue: Song [] = [];
+let queue: Song[] = [];
 
 //Sets the connection
 function setConnection(incomingConnection: VoiceConnection): void {
@@ -45,10 +46,16 @@ async function play(idx: number): Promise<void> {
         filter: 'audioonly',
         encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
+    const streamOpts = { quality: "highestaudio", filter: "audioonly", highWaterMark: 1 << 25 };
+    // const downloadOpts: downloadOptions = {
+    //     filter: 'audioonly',
+    // };
     if (idx === undefined || idx === null)
         return;
-        
-    dispatcher = connection.play(await ytdl(queue[idx].url), { type: 'opus', })
+    // let info = await ytdl.getInfo(ytdl.getURLVideoID('http://www.youtube.com/watch?v=aqz-KE-bpKQ'));
+    // let format = ytdl.chooseFormat(info.formats, 'audioonly');
+    // console.log('Formats with only audio: ' + JSON.stringify(format));
+    dispatcher = connection.play(await ytdl(queue[idx].url, audioOpts))
         .on('start', () => {
             queue[idx].isPlaying = true;
         })
@@ -57,7 +64,6 @@ async function play(idx: number): Promise<void> {
             next()
         })
         .on('error', console.error);
-    console.log(dispatcher)
 }
 
 //Skip to a specific index in the queue list
@@ -121,7 +127,7 @@ function remove(songIdx: number): void {
 
     const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
 
-    if(songIdx === currentPlayingIdx) {
+    if (songIdx === currentPlayingIdx) {
         dispatcher.end();
     }
 

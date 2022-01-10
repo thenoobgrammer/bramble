@@ -1,9 +1,9 @@
 import { Client, VoiceChannel } from 'discord.js'
+import ytsr, { Video } from 'ytsr';
+import { Song } from './model/song';
+import music from './commands/music';
 import { existsSync, readdirSync } from 'fs';
 import { basename } from 'path';
-import { Song } from './model/song';
-import ytsr, { Video } from 'ytsr';
-import music from './commands/music';
 //import audio from './commands/audio';
 //import drinks from './commands/drinks';
 
