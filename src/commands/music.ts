@@ -1,6 +1,6 @@
-const fs = require('fs');
-const ytdl = require('ytdl-core');
-
+import fs = require('fs');
+//const ytdl = require('ytdl-core');
+import ytdl = require('ytdl-core');
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/song';
 
@@ -39,18 +39,13 @@ function addToQueue(song: Song): void {
 //Plays an audio. 
 //OptionalIdx is passed as optional. Can be without.
 async function play(idx: number): Promise<void> {
-    const audioOpts = {
-        type: 'opus',
-        fmt: 'mp3',
-        defaultVolume: currentVolume,
+    const audioOpts: ytdl.downloadOptions = {
+        dlChunkSize: 5000,
         highWaterMark: 1,
         filter: 'audioonly',
-        encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     };
 
-    if (idx === undefined || idx === null)
-        return;
-
+    
     dispatcher = connection.play(await ytdl(queue[idx].url, audioOpts))
         .on('start', () => {
             queue[idx].isPlaying = true;
