@@ -4,7 +4,7 @@ import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher,
 import { Song } from '../model/song';
 
 const commands: EmbedFieldData[] = [
-    { name: 'play', value: 'Plays first video from Youtube search', inline: false },
+    { name: 'play - song1;song2;song3', value: 'Plays first video from Youtube search', inline: false },
     { name: 'pause', value: 'Pause music', inline: false },
     { name: 'resume', value: 'Resume music', inline: false },
     { name: 'skip - The position of the song', value: 'Skip to a song in the queue', inline: false },
@@ -27,13 +27,15 @@ function setConnection(incomingConnection: VoiceConnection): void {
     connection = incomingConnection;
 }
 
-function addToQueue(song: Song): void {
-    queue.push(song);
-    if (queue.length === 1) play(0);
+function addToQueue(songs: Song []): void {
+    if(!songs || songs.length === 0) return;
+
+    songs.forEach(song => queue.push(song));
+
+    play(0);
 }
 
 
-//Skip to a specific index in the queue list
 function skip(songIdx: number): void {
     songIdx--;
 

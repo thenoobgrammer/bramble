@@ -22,9 +22,6 @@ const pathToAudios: string = "../sounds";
 bot.login(token);
 bot.on('ready', () => {
     const channel = bot.channels.cache.get(channel_id);
-    // if(!channel || channel.type !== Constants.ChannelTypes.VOICE)
-    //     return;
-
     (channel as VoiceChannel).join().then(connection => {
         music.setConnection(connection);
         console.log("Music Bot successfully connected.");
@@ -37,14 +34,14 @@ bot.on('message', (msg) => {
     if (msg.author.bot) return;
     if (!msg.content.startsWith(prefix)) return;
 
-    const args = msg.content.slice(prefix.length).trim().split(/ +/g);
+    const args = msg.content.slice(prefix.length).trim().split(/(?<=^\S+)\s/);
     const command = args.shift()?.toLowerCase();
-
+    
     switch (command) {
-        case 'play': search(args.join(' '), msg.author.username).then(result => music.addToQueue(result)); break;
+        case 'play': search(args[0].split(';'), msg.author.username).then(result => music.addToQueue(result)); break;
         case 'skip': music.skip(args.join(' ') as unknown as number); break;
         case 'resume': music.resume(); break;
-        case 'next': music.resume(); break;
+        case 'next': music.next(); break;
         case 'vol': music.volume(args.join(' ') as unknown as number); break;
         case 'prev': music.previous(); break;
         case 'rm': music.remove(args.join(' ') as unknown as number); break;
@@ -55,22 +52,22 @@ bot.on('message', (msg) => {
         default: msg.channel.send(`Kho. Abuse moi pas s.v.p !mhelp pour de l'aide`); break;
     }
 
-    //if (command === 'ahelp') audio.displayAudioHelp(msg.channel, audios.map(a => { return { name: a, value: a, inline: false } }));
-
-    // const a = audios.find(x => x === command);
-
-    // if (a)
-    //     audio.playAudio(msg, `${pathToAudios}/${a}.mp3`);
-
-    async function search(query: string, author: string): Promise<Song> {
-        const result = await ytsr(query);
-        const songInfo: Video = result.items.filter(x => x.type === 'video')[0] as Video;
-        const song: Song = {
-            title: songInfo.title,
-            url: songInfo.url,
-            author: author,
-            isPlaying: false
-        };
-        return song;
+    async function search(queries: string[], author: string): Promise<Song[]> {
+        let songs: Song[] = [];
+        while (queries && queries.length !== 0) {
+            const query = queries.pop();
+            if (query) {
+                const result = await ytsr(query);
+                const songInfo: Video = result.items.filter(x => x.type === 'video')[0] as Video;
+                const song: Song = {
+                    title: songInfo.title,
+                    url: songInfo.url,
+                    author: author,
+                    isPlaying: false
+                };
+                songs.push(song);
+            }
+        }
+        return songs;
     };
 });
