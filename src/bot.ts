@@ -24,7 +24,7 @@ bot.on('ready', () => {
     const channel = bot.channels.cache.get(channel_id);
     // if(!channel || channel.type !== Constants.ChannelTypes.VOICE)
     //     return;
-        
+
     (channel as VoiceChannel).join().then(connection => {
         music.setConnection(connection);
         console.log("Music Bot successfully connected.");
@@ -38,36 +38,22 @@ bot.on('message', (msg) => {
     if (!msg.content.startsWith(prefix)) return;
 
     const args = msg.content.slice(prefix.length).trim().split(/ +/g);
-
     const command = args.shift()?.toLowerCase();
 
-    //if (command === 'search') drinks.searchDrink(args, msg.channel)
+    switch (command) {
+        case 'play': search(args.join(' '), msg.author.username).then(result => music.addToQueue(result)); break;
+        case 'skip': music.skip(args.join(' ') as unknown as number); break;
+        case 'resume': music.resume(); break;
+        case 'next': music.resume(); break;
+        case 'vol': music.volume(args.join(' ') as unknown as number); break;
+        case 'prev': music.previous(); break;
+        case 'rm': music.remove(args.join(' ') as unknown as number); break;
+        case 'clr': music.clear(); break;
+        case 'q': music.seeQueue(msg.channel); break;
+        case 'mhelp': music.displayHelp(msg.channel); break;
 
-    //if (command === 'locate') drinks.searchStore(args, msg.channel);
-
-    if (command === 'play')
-        search(args.join(' '), msg.author.username)
-            .then(result => music.addToQueue(result));
-
-    if (command === 'skip') music.skip(args.join(' ') as unknown as number)
-
-    if (command === 'resume') music.resume()
-
-    if (command === 'pause') music.pause()
-
-    if (command === 'next') music.next()
-
-    if (command === 'vol') music.volume(args.join(' ') as unknown as number);
-
-    if (command === 'prev') music.previous();
-
-    if (command === 'rm') music.remove(args.join(' ') as unknown as number);
-
-    if (command === 'clr') music.clear();
-
-    if (command === 'q') music.seeQueue(msg.channel);
-
-    if (command === 'mhelp') music.displayHelp(msg.channel);
+        default: msg.channel.send(`Kho. Abuse moi pas s.v.p !mhelp pour de l'aide`); break;
+    }
 
     //if (command === 'ahelp') audio.displayAudioHelp(msg.channel, audios.map(a => { return { name: a, value: a, inline: false } }));
 
