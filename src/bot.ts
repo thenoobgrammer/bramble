@@ -49,7 +49,7 @@ bot.on('message', (msg) => {
         case 'q': music.seeQueue(msg.channel); break;
         case 'mhelp': music.displayHelp(msg.channel); break;
 
-        default: msg.channel.send(`Kho. Abuse moi pas s.v.p !mhelp pour de l'aide`); break;
+        default: return;
     }
 
     async function search(queries: string[], author: string): Promise<Song[]> {
