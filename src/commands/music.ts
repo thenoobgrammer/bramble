@@ -1,4 +1,3 @@
-import fs = require('fs');
 import ytdl = require('ytdl-core');
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/song';
@@ -32,7 +31,10 @@ function addToQueue(songs: Song []): void {
 
     songs.forEach(song => queue.push(song));
 
-    play(0);
+    const isSongPlaying = queue.find(x => x.isPlaying);
+
+    if(!isSongPlaying)
+        play(0);
 }
 
 
