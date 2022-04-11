@@ -139,8 +139,8 @@ async function seeQueue(channel: TextChannel | DMChannel | NewsChannel): Promise
         .setColor('#008369')
         .setDescription(queue.map((song, idx) => {
             if (song.isPlaying)
-                return `\`\`\`yaml\n${idx + 1}. ${song.title} (Req by. ${song.author}) - ${song.loop ? 'LOOPED' : ''}\`\`\``;
-            return `${idx + 1}. ${song.title} (Req by. ${song.author}) - ${song.loop ? 'LOOPED' : ''}`;
+                return `\`\`\`yaml\n${idx + 1}. ${song.title} (Req by. ${song.author}) ${song.loop ? '- LOOPED' : ''}\`\`\``;
+            return `${idx + 1}. ${song.title} (Req by. ${song.author}) ${song.loop ? '- LOOPED' : ''}`;
         }))
     await channel.send(embed);
 }
