@@ -41,7 +41,7 @@ function addToQueue(songs: Song []): void {
 function skip(songIdx: number): void {
     songIdx--;
 
-    unloop();
+    //unloop();
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
 
