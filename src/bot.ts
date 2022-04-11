@@ -2,10 +2,6 @@ import { Client, VoiceChannel } from 'discord.js'
 import ytsr, { Video } from 'ytsr';
 import { Song } from './model/song';
 import music from './commands/music';
-import { existsSync, readdirSync } from 'fs';
-import { basename } from 'path';
-//import audio from './commands/audio';
-//import drinks from './commands/drinks';
 
 require('dotenv').config();
 
@@ -13,11 +9,6 @@ const channel_id: string = process.env.CHANNEL_ID as string;
 const token: string = process.env.BOT_TOKEN as string
 const bot = new Client();
 const prefix: string = '!';
-const pathToAudios: string = "../sounds";
-// const audios = existsSync(pathToAudios) ?
-//     readdirSync(pathToAudios)
-//         .filter(fileName => fileName.includes('.mp3'))
-//         .map(fileName => basename(fileName, '.mp3')) : null;
 
 bot.login(token);
 bot.on('ready', () => {
