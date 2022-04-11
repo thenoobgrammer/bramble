@@ -41,7 +41,7 @@ function addToQueue(songs: Song []): void {
 function skip(songIdx: number): void {
     songIdx--;
 
-    //unloop();
+    unloop();
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
 
@@ -79,7 +79,7 @@ function next(): void {
 }
 
 function previous(): void {
-    if (!queue || queue.length === 0)
+    if (!queue)
         return;
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
@@ -112,12 +112,21 @@ function volume(volume: number): void {
 
 function loop(): void {
     const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
+    console.log(currentPlayingIdx)
+    
+    if(currentPlayingIdx < 0)
+        return
+
     queue[currentPlayingIdx].loop = true;
 }
 
 function unloop() {
-    const currLoopedSong = queue.findIndex(x => x.loop = x.loop);
-    queue[currLoopedSong].loop = false;
+    const currLoopedSongIdx = queue.findIndex(x => x.loop);
+    
+    if(currLoopedSongIdx < 0)
+        return
+
+    queue[currLoopedSongIdx].loop = false;
 }
 
 async function play(idx: number): Promise<void> {

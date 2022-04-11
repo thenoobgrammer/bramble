@@ -42,6 +42,7 @@ bot.on('message', (msg) => {
         case 'skip': music.skip(args.join(' ') as unknown as number); break;
         case 'resume': music.resume(); break;
         case 'next': music.next(); break;
+        case 'loop': music.loop(); break;
         case 'vol': music.volume(args.join(' ') as unknown as number); break;
         case 'prev': music.previous(); break;
         case 'rm': music.remove(args.join(' ') as unknown as number); break;
@@ -63,7 +64,8 @@ bot.on('message', (msg) => {
                     title: songInfo.title,
                     url: songInfo.url,
                     author: author,
-                    isPlaying: false
+                    isPlaying: false,
+                    loop: false
                 };
                 songs.push(song);
             }

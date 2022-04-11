@@ -3,5 +3,5 @@ export interface Song {
   url: string;
   author: string;
   isPlaying: boolean;
-  loop?: boolean;
+  loop: boolean;
 };
