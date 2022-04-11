@@ -11,7 +11,7 @@ require('dotenv').config();
 
 const channel_id: string = process.env.CHANNEL_ID as string;
 const token: string = process.env.BOT_TOKEN as string
-const bot: Client = new Client();
+const bot = new Client();
 const prefix: string = '!';
 const pathToAudios: string = "../sounds";
 // const audios = existsSync(pathToAudios) ?

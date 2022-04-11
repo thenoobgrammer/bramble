@@ -41,6 +41,8 @@ function addToQueue(songs: Song []): void {
 function skip(songIdx: number): void {
     songIdx--;
 
+    unloop();
+
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
 
     if (queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1 || songIdx === currPlayingIdx || currentSongPlaying === queue[songIdx]) return;
@@ -65,11 +67,15 @@ function next(): void {
     if (!queue || queue.length === 0) return;
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
-    let nextIdx = (queue.length === 1 || currPlayingIdx === queue.length - 1) ? 0 : currPlayingIdx + 1;
-    console.log(`nextIdx: ${nextIdx} currPlayingIdx: ${currPlayingIdx}`);
-
-    queue[currPlayingIdx].isPlaying = false;
-    play(nextIdx);
+    
+    if(queue[currPlayingIdx].loop) 
+        play(currPlayingIdx);
+    
+    else {
+        let nextIdx = (queue.length === 1 || currPlayingIdx === queue.length - 1) ? 0 : currPlayingIdx + 1;
+        queue[currPlayingIdx].isPlaying = false;
+        play(nextIdx);
+    }
 }
 
 function previous(): void {
@@ -89,7 +95,7 @@ function remove(songIdx: number): void {
 
     const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
 
-    if (songIdx === currentPlayingIdx) dispatcher.end();
+    if (songIdx === currentPlayingIdx) next();
 
     queue.splice(songIdx, 1);
 }
@@ -102,6 +108,16 @@ function clear(): void {
 function volume(volume: number): void {
     currentVolume = volume < 0 ? 0 : volume
     dispatcher.setVolume(currentVolume);
+}
+
+function loop(): void {
+    const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
+    queue[currentPlayingIdx].loop = true;
+}
+
+function unloop() {
+    const currLoopedSong = queue.findIndex(x => x.loop = x.loop);
+    queue[currLoopedSong].loop = false;
 }
 
 async function play(idx: number): Promise<void> {
@@ -123,8 +139,8 @@ async function seeQueue(channel: TextChannel | DMChannel | NewsChannel): Promise
         .setColor('#008369')
         .setDescription(queue.map((song, idx) => {
             if (song.isPlaying)
-                return `\`\`\`yaml\n${idx + 1}. ${song.title} (Req by. ${song.author})\`\`\``;
-            return `${idx + 1}. ${song.title} (Req by. ${song.author})`;
+                return `\`\`\`yaml\n${idx + 1}. ${song.title} (Req by. ${song.author}) - ${song.loop ? 'LOOPED' : ''}\`\`\``;
+            return `${idx + 1}. ${song.title} (Req by. ${song.author}) - ${song.loop ? 'LOOPED' : ''}`;
         }))
     await channel.send(embed);
 }
@@ -143,6 +159,8 @@ export default {
     play,
     stop,
     skip,
+    loop,
+    unloop,
     pause,
     resume,
     next,
