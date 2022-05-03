@@ -4,4 +4,4 @@ export interface Song {
   author: string;
   isPlaying: boolean;
   loop: boolean;
-};
+}

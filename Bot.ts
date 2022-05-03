@@ -1,14 +1,14 @@
 import { Client, VoiceChannel } from 'discord.js'
 import ytsr, { Video } from 'ytsr';
-import { Song } from './model/song';
-import music from './commands/music';
+import { Song } from './src/model/Song';
+import music from './src/commands/Music';
 
 require('dotenv').config();
 
 const channel_id: string = process.env.CHANNEL_ID as string;
 const token: string = process.env.BOT_TOKEN as string
 const bot = new Client();
-const prefix: string = '!';
+const prefix = '!';
 
 bot.login(token);
 bot.on('ready', () => {
@@ -45,7 +45,7 @@ bot.on('message', (msg) => {
     }
 
     async function search(queries: string[], author: string): Promise<Song[]> {
-        let songs: Song[] = [];
+        const songs: Song[] = [];
         while (queries && queries.length !== 0) {
             const query = queries.pop();
             if (query) {
@@ -62,5 +62,5 @@ bot.on('message', (msg) => {
             }
         }
         return songs;
-    };
+    }
 });

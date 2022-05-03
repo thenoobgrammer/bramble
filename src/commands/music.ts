@@ -1,6 +1,6 @@
 import ytdl = require('ytdl-core');
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
-import { Song } from '../model/song';
+import { Song } from '../model/Song';
 
 const commands: EmbedFieldData[] = [
     { name: 'play - song1;song2;song3', value: 'Plays first video from Youtube search', inline: false },
@@ -72,7 +72,7 @@ function next(): void {
         play(currPlayingIdx);
     
     else {
-        let nextIdx = (queue.length === 1 || currPlayingIdx === queue.length - 1) ? 0 : currPlayingIdx + 1;
+        const nextIdx = (queue.length === 1 || currPlayingIdx === queue.length - 1) ? 0 : currPlayingIdx + 1;
         queue[currPlayingIdx].isPlaying = false;
         play(nextIdx);
     }
@@ -83,7 +83,7 @@ function previous(): void {
         return;
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
-    let prevIdx = (queue.length === 1 || currPlayingIdx === 0) ? queue.length - 1 : currPlayingIdx - 1;
+    const prevIdx = (queue.length === 1 || currPlayingIdx === 0) ? queue.length - 1 : currPlayingIdx - 1;
 
     queue[currPlayingIdx].isPlaying = false;
     play(prevIdx);
