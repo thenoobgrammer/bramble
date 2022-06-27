@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonJS",
+        "moduleResolution": "node",
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
