@@ -1,7 +1,7 @@
 import { Client, VoiceChannel } from 'discord.js'
 import ytsr, { Video } from 'ytsr';
 import { Song } from './src/model/Song';
-import music from './src/commands/Music';
+import { addToQueue, skip, resume, next, loop, volume, previous, remove, clear, seeQueue, displayHelp, setConnection} from './src/commands/Music';
 
 require('dotenv').config();
 
@@ -14,7 +14,7 @@ bot.login(token);
 bot.on('ready', () => {
     const channel = bot.channels.cache.get(channel_id);
     (channel as VoiceChannel).join().then(connection => {
-        music.setConnection(connection);
+        setConnection(connection);
         console.log("Music Bot successfully connected.");
     }).catch(e => {
         console.error(e);
@@ -29,17 +29,17 @@ bot.on('message', (msg) => {
     const command = args.shift()?.toLowerCase();
     
     switch (command) {
-        case 'play': search(args[0].split(';'), msg.author.username).then(result => music.addToQueue(result)); break;
-        case 'skip': music.skip(args.join(' ') as unknown as number); break;
-        case 'resume': music.resume(); break;
-        case 'next': music.next(); break;
-        case 'loop': music.loop(); break;
-        case 'vol': music.volume(args.join(' ') as unknown as number); break;
-        case 'prev': music.previous(); break;
-        case 'rm': music.remove(args.join(' ') as unknown as number); break;
-        case 'clr': music.clear(); break;
-        case 'q': music.seeQueue(msg.channel); break;
-        case 'mhelp': music.displayHelp(msg.channel); break;
+        case 'play': search(args[0].split(';'), msg.author.username).then(result => addToQueue(result)); break;
+        case 'skip': skip(args.join(' ') as unknown as number); break;
+        case 'resume': resume(); break;
+        case 'next': next(); break;
+        case 'loop': loop(); break;
+        case 'vol': volume(args.join(' ') as unknown as number); break;
+        case 'prev': previous(); break;
+        case 'rm': remove(args.join(' ') as unknown as number); break;
+        case 'clr': clear(); break;
+        case 'q': seeQueue(msg.channel); break;
+        case 'mhelp': displayHelp(msg.channel); break;
 
         default: return;
     }

@@ -1,4 +1,4 @@
-import ytdl = require('ytdl-core');
+import ytdl from 'ytdl-core';
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
 import { Song } from '../model/Song';
 
@@ -22,11 +22,11 @@ let connection: VoiceConnection;
 let dispatcher: StreamDispatcher;
 let queue: Song[] = [];
 
-function setConnection(incomingConnection: VoiceConnection): void {
+export const setConnection = (incomingConnection: VoiceConnection): void => {
     connection = incomingConnection;
 }
 
-function addToQueue(songs: Song []): void {
+export const addToQueue = (songs: Song []): void => {
     if(!songs || songs.length === 0) return;
 
     songs.forEach(song => queue.push(song));
@@ -38,7 +38,7 @@ function addToQueue(songs: Song []): void {
 }
 
 
-function skip(songIdx: number): void {
+export const skip = (songIdx: number): void => {
     songIdx--;
 
     unloop();
@@ -51,19 +51,19 @@ function skip(songIdx: number): void {
     play(songIdx);
 }
 
-function resume(): void {
+export const resume = (): void => {
     dispatcher.resume();
 }
 
-function pause(): void {
+export const pause = (): void => {
     dispatcher.pause()
 }
 
-function stop(): void {
+export const stop = (): void => {
     dispatcher.end();
 }
 
-function next(): void {
+export const next = (): void => {
     if (!queue || queue.length === 0) return;
 
     const currPlayingIdx = queue.findIndex(x => x.isPlaying);
@@ -78,7 +78,7 @@ function next(): void {
     }
 }
 
-function previous(): void {
+export const previous = (): void => {
     if (!queue)
         return;
 
@@ -89,7 +89,7 @@ function previous(): void {
     play(prevIdx);
 }
 
-function remove(songIdx: number): void {
+export const remove = (songIdx: number): void => {
     songIdx--;
     if (queue.length === 0 || songIdx < 0 || songIdx > queue.length - 1) return;
 
@@ -100,17 +100,17 @@ function remove(songIdx: number): void {
     queue.splice(songIdx, 1);
 }
 
-function clear(): void {
+export const clear = (): void => {
     dispatcher.end();
     queue = [];
 }
 
-function volume(volume: number): void {
+export const volume = (volume: number): void => {
     currentVolume = volume < 0 ? 0 : volume
     dispatcher.setVolume(currentVolume);
 }
 
-function loop(): void {
+export const loop = (): void => {
     const currentPlayingIdx = queue.findIndex(x => x.isPlaying);
     console.log(currentPlayingIdx)
     
@@ -120,7 +120,7 @@ function loop(): void {
     queue[currentPlayingIdx].loop = true;
 }
 
-function unloop() {
+export const unloop = () => {
     const currLoopedSongIdx = queue.findIndex(x => x.loop);
     
     if(currLoopedSongIdx < 0)
@@ -129,7 +129,7 @@ function unloop() {
     queue[currLoopedSongIdx].loop = false;
 }
 
-async function play(idx: number): Promise<void> {
+export const  play = async (idx: number): Promise<void> => {
     const audioOpts: ytdl.downloadOptions = {
         dlChunkSize: 5000,
         highWaterMark: 1,
@@ -142,7 +142,7 @@ async function play(idx: number): Promise<void> {
         .on('error', console.error);
 }
 
-async function seeQueue(channel: TextChannel | DMChannel | NewsChannel): Promise<void> {
+export const seeQueue = async (channel: TextChannel | DMChannel | NewsChannel): Promise<void> => {
     const embed = new MessageEmbed()
         .setTitle(`Current queue`)
         .setColor('#008369')
@@ -155,29 +155,10 @@ async function seeQueue(channel: TextChannel | DMChannel | NewsChannel): Promise
 }
 
 //Displays commands for music
-async function displayHelp(channel: TextChannel | DMChannel | NewsChannel): Promise<void> {
+export const displayHelp = async (channel: TextChannel | DMChannel | NewsChannel): Promise<void> => {
     const embed = new MessageEmbed()
         .setTitle(`Here are the commands for the music Bot`)
         .setColor('#7A2F8F')
         .addFields(commands)
     await channel.send(embed);
-}
-
-export default {
-    addToQueue,
-    play,
-    stop,
-    skip,
-    loop,
-    unloop,
-    pause,
-    resume,
-    next,
-    previous,
-    volume,
-    remove,
-    clear,
-    setConnection,
-    seeQueue,
-    displayHelp
 }
