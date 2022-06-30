@@ -3,7 +3,7 @@
   "version": "1.0.01",
   "description": "",
   "scripts": {
-    "start": "ts-node Bot.tsx",
+    "start": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "thenoobgrammer",
@@ -11,10 +11,13 @@
   "main": "Bot.ts",
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
+    "@discordjs/rest": "^0.5.0",
+    "@discordjs/voice": "^0.10.0",
     "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.10",
+    "discord-api-types": "^0.35.0",
     "discord-ytdl-core": "^5.0.4",
-    "discord.js": "^12.5.1",
+    "discord.js": "^13.8.1",
     "discord.js-commando": "^0.11.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

@@ -1,7 +1,7 @@
 export interface Song {
   title: string;
   url: string;
-  author: string;
+  requester: string;
   isPlaying: boolean;
   loop: boolean;
 }

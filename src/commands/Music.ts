@@ -1,6 +1,6 @@
 import ytdl from 'ytdl-core';
 import { DMChannel, EmbedFieldData, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel, VoiceConnection } from 'discord.js';
-import { Song } from '../model/Song';
+import { Song } from '../interface/song';
 
 const commands: EmbedFieldData[] = [
     { name: 'play - song1;song2;song3', value: 'Plays first video from Youtube search', inline: false },
@@ -36,7 +36,6 @@ export const addToQueue = (songs: Song []): void => {
     if(!isSongPlaying)
         play(0);
 }
-
 
 export const skip = (songIdx: number): void => {
     songIdx--;
@@ -129,7 +128,7 @@ export const unloop = () => {
     queue[currLoopedSongIdx].loop = false;
 }
 
-export const  play = async (idx: number): Promise<void> => {
+export const play = async (idx: number): Promise<void> => {
     const audioOpts: ytdl.downloadOptions = {
         dlChunkSize: 5000,
         highWaterMark: 1,
@@ -154,7 +153,6 @@ export const seeQueue = async (channel: TextChannel | DMChannel | NewsChannel): 
     await channel.send(embed);
 }
 
-//Displays commands for music
 export const displayHelp = async (channel: TextChannel | DMChannel | NewsChannel): Promise<void> => {
     const embed = new MessageEmbed()
         .setTitle(`Here are the commands for the music Bot`)
