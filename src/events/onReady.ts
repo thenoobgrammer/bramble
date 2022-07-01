@@ -8,7 +8,7 @@ import {
 } from "discord.js/node_modules/discord-api-types/v9";
 
 export const onReady = async (BOT: Client) => {
-  const rest = new REST({ version: "9" }).setToken(
+  const rest = new REST({ version: "10" }).setToken(
     process.env.BOT_TOKEN as string
   );
 
@@ -16,12 +16,12 @@ export const onReady = async (BOT: Client) => {
     process.env.CHANNEL_ID as string
   ) as VoiceChannel;
 
-  vChannel
-    && joinVoiceChannel({
-        channelId: vChannel.id,
-        guildId: vChannel.guild.id,
-        adapterCreator: vChannel.guild.voiceAdapterCreator,
-      })
+  vChannel &&
+    joinVoiceChannel({
+      channelId: vChannel.id,
+      guildId: vChannel.guild.id,
+      adapterCreator: vChannel.guild.voiceAdapterCreator,
+    });
 
   const commandData: {
     name: string;

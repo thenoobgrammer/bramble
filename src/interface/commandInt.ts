@@ -1,16 +1,18 @@
 import {
-    SlashCommandBuilder,
-    SlashCommandSubcommandsOnlyBuilder,
-  } from "@discordjs/builders";
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+} from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { Song } from "./song";
-  
-interface OptionalParams {
-  index?: number
-}
+import { OptionalParams } from "./optionalParams";
+import { AudioPlayer } from "@discordjs/voice";
 
 export interface CommandInt {
   name?: string;
   data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
-  run: (interaction: CommandInteraction, currentQueue?: Song [], optionalParams?: OptionalParams ) => Promise<void>;
+  run: (
+    interaction: CommandInteraction,
+    currentQueue?: Song[],
+    player?: AudioPlayer
+  ) => Promise<void>;
 }
