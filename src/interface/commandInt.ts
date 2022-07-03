@@ -4,8 +4,8 @@ import {
 } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { Song } from "./song";
-import { OptionalParams } from "./optionalParams";
 import { AudioPlayer } from "@discordjs/voice";
+import { OptionalParams } from "./optionalParams";
 
 export interface CommandInt {
   name?: string;
@@ -13,6 +13,7 @@ export interface CommandInt {
   run: (
     interaction: CommandInteraction,
     currentQueue?: Song[],
-    player?: AudioPlayer
+    player?: AudioPlayer,
+    options?: OptionalParams
   ) => Promise<void>;
 }

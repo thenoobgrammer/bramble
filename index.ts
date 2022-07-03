@@ -3,6 +3,7 @@ import { onInteraction } from "./src/events/onInteraction";
 import { onReady } from "./src/events/onReady";
 import { Song } from "./src/interface/song";
 import { AudioPlayerStatus, createAudioPlayer } from "@discordjs/voice";
+import { next } from "./src/commands/next";
 
 require("dotenv").config();
 
@@ -28,4 +29,8 @@ BOT.on("interactionCreate", async (interaction) => {
 
 player.on(AudioPlayerStatus.Playing, () => {
   console.log("The audio player has started playing!");
+});
+
+player.on(AudioPlayerStatus.Idle, (interaction) => {
+  next.run(interaction, queue, player);
 });

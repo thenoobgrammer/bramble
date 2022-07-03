@@ -1,3 +1,3 @@
 export interface OptionalParams {
-  index?: number;
+  nextIndex?: number;
 }
