@@ -1,11 +1,8 @@
 import { CommandInt } from "../interface/commandInt";
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { downloadOptions } from "../utils/downloadOptions";
-import ytdl from "ytdl-core";
+import { getIndexResource, indexValid } from "../utils/queueManager";
 import {
-  createAudioResource,
   getVoiceConnection,
-  StreamType,
 } from "@discordjs/voice";
 
 export const play: CommandInt = {
@@ -18,39 +15,39 @@ export const play: CommandInt = {
         .setDescription("The index of the song to play in the queue.")
         .setRequired(false)
     ) as SlashCommandBuilder,
-  run: async (interaction, currentQueue, player, optionParams) => {
+  run: async (interaction, currentQueue, player) => {
+
     if (!currentQueue || currentQueue?.length <= 0) {
-      interaction.reply({
+      interaction?.reply({
         content: "Queue is empty. Please load songs first.",
       });
       return;
     }
-
+    const reg = new RegExp('^[0-9]+$');
     const { guildId, options } = interaction;
-    const paramIdx = options.getString("idx");
-    const optionsIdx = optionParams?.nextIndex;
-    const a = optionsIdx ? optionsIdx : parseInt(paramIdx!);
-    const i = a > currentQueue.length ? 1 : a;
+    const input = options.getString("idx") || ''
 
-    if (i <= 0) {
-      interaction.reply({
+    if (!reg.test(input)) {
+      interaction?.reply({
+        content: "Wrong input. Please enter a number.",
+      });
+      return;
+    }
+
+    const index = parseInt(input) - 1;
+
+    if (!indexValid(index, currentQueue)) {
+      interaction?.reply({
         content: "Invalid index. Please choose an index in the current queue.",
       });
       return;
     }
 
     const connection = guildId ? getVoiceConnection(guildId) : null;
-    const url = currentQueue ? currentQueue[i - 1].url : "";
-    const stream = ytdl(url, downloadOptions);
-    const resource = createAudioResource(stream, {
-      inputType: StreamType.Arbitrary,
-    });
 
     if (player) {
-      player.play(resource);
+      player.play(getIndexResource(index, currentQueue));
       connection?.subscribe(player);
-      currentQueue.forEach((s) => (s.isPlaying = false));
-      currentQueue[i - 1].isPlaying = true;
     }
   },
 };

@@ -1,17 +1,23 @@
 import { CommandInt } from "../interface/commandInt";
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { play } from "./play";
+import { getNextResource } from "../utils/queueManager";
 
 export const next: CommandInt = {
   data: new SlashCommandBuilder()
     .setName("next")
     .setDescription("Play next song in currentQueue."),
   run: async (interaction, currentQueue, player) => {
-    if (!currentQueue || currentQueue.length === 0) return;
+    if (!currentQueue || currentQueue.length === 0) {
+      interaction?.reply({
+        content: "Queue is empty. Please load songs first.",
+      });
+      return
+    };
 
-    const currPlayingIdx = currentQueue.findIndex((s) => s.isPlaying) + 1;
-    const nextIdx = currPlayingIdx + 1;
-
-    play.run(interaction, currentQueue, player, { nextIndex: nextIdx });
+    interaction?.reply({
+      content: "Playing next song in queue!",
+    });
+    
+    player?.play(getNextResource(currentQueue))
   },
 };

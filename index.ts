@@ -2,8 +2,11 @@ import { Client, IntentsString } from "discord.js";
 import { onInteraction } from "./src/events/onInteraction";
 import { onReady } from "./src/events/onReady";
 import { Song } from "./src/interface/song";
-import { AudioPlayerStatus, createAudioPlayer } from "@discordjs/voice";
-import { next } from "./src/commands/next";
+import { getNextResource } from "./src/utils/queueManager";
+import {
+  AudioPlayerStatus,
+  createAudioPlayer,
+} from "@discordjs/voice";
 
 require("dotenv").config();
 
@@ -31,6 +34,6 @@ player.on(AudioPlayerStatus.Playing, () => {
   console.log("The audio player has started playing!");
 });
 
-player.on(AudioPlayerStatus.Idle, (interaction) => {
-  next.run(interaction, queue, player);
+player.on(AudioPlayerStatus.Idle, () => {
+  player.play(getNextResource(queue))
 });
