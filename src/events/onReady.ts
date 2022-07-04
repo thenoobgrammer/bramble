@@ -43,7 +43,7 @@ export const onReady = async (BOT: Client) => {
   await rest.put(
     Routes.applicationGuildCommands(
       BOT.user?.id || "missing token",
-      process.env.GUILD_ID as string
+      vChannel.guildId as string
     ),
     { body: commandData }
   );
