@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { Client, DMChannel, VoiceChannel } from "discord.js";
+import { Client, VoiceChannel } from "discord.js";
 import { joinVoiceChannel } from "@discordjs/voice";
 import { CommandList } from "../commands/_CommandList";
 import {
@@ -48,8 +48,4 @@ export const onReady = async (BOT: Client) => {
     ),
     { body: commandData }
   );
-
-  const random = BOT.channels.cache.get('118144496998416387') as DMChannel;
-  
-  random.send('<@196051995319074817> I have grass for you to eat. Bitch.')
 };
