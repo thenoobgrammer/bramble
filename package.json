@@ -32,7 +32,9 @@
     "ytsr": "^3.2.3"
   },
   "devDependencies": {
+    "@types/cron": "^2.0.0",
     "@types/node": "^18.0.0",
+    "cron": "^2.0.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   }

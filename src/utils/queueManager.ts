@@ -19,17 +19,6 @@ export const getIndexResource = (idx: number, queue: Song[]): AudioResource => {
     const song = queue[idx];
     const stream = ytdl(song.url, downloadOptions);
 
-    console.log(stream)
-
-    // const options: Options = {
-    //     args: [song.url]
-    // }
-
-    // PythonShell.run('download.py', options, function (err, results) {
-    //     if (err) throw err;
-    //     console.log('results: %j', results);
-    // });
-
     return createAudioResource(stream, {
         inputType: StreamType.Arbitrary,
     });
@@ -45,16 +34,20 @@ export const getNextResource = (queue: Song[]): AudioResource => {
 
     const stream = ytdl(nextSong.url, downloadOptions);
 
-    console.log(stream)
+    return createAudioResource(stream, {
+        inputType: StreamType.Arbitrary,
+    });
+};
 
-    // const options: Options = {
-    //     args: [nextSong.url]
-    // }
+export const getPreviousResource = (queue: Song[]): AudioResource => {
+    const currentlyPlaying = queue.findIndex((s) => s.isPlaying);
+    const nextInQueue = currentlyPlaying - 1 < 0 ? queue.length - 1  : currentlyPlaying - 1;
+    const nextSong = queue[nextInQueue];
 
-    // PythonShell.run('download.py', options, function (err, results) {
-    //     if (err) throw err;
-    //     console.log('results: %j', results);
-    // });
+    queue.forEach(s => s.isPlaying = false)
+    queue[nextInQueue].isPlaying = true;
+
+    const stream = ytdl(nextSong.url, downloadOptions);
 
     return createAudioResource(stream, {
         inputType: StreamType.Arbitrary,

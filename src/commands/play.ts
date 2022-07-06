@@ -46,6 +46,9 @@ export const play: CommandInt = {
     const connection = guildId ? getVoiceConnection(guildId) : null;
 
     if (player) {
+      interaction?.reply({
+        content: "Playing your song.",
+      });
       player.play(getIndexResource(index, currentQueue));
       connection?.subscribe(player);
     }
