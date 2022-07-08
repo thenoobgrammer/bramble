@@ -1,12 +1,11 @@
 import { downloadOptions } from "./downloadOptions";
+import { Song } from "../interface/song";
+import ytdl from "ytdl-core";
 import {
     createAudioResource,
     StreamType,
     AudioResource,
 } from "@discordjs/voice";
-import { Song } from "../interface/song";
-import ytdl from "ytdl-core";
-import { PythonShell, Options } from 'python-shell';
 
 export const indexValid = (idx: number, queue: Song[]): boolean => {
     return idx >= 0 && idx < queue.length;

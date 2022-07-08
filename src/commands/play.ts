@@ -23,6 +23,7 @@ export const play: CommandInt = {
       });
       return;
     }
+    
     const reg = new RegExp('^[0-9]+$');
     const { guildId, options } = interaction;
     const input = options.getString("idx") || ''

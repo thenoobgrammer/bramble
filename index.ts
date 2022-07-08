@@ -24,6 +24,7 @@ BOT.login(token);
 
 BOT.on("ready", async (client) => {
   await onReady(client);
+  console.log("Bot successfully connected");
 });
 
 BOT.on("interactionCreate", async (interaction) => {
@@ -35,5 +36,7 @@ player.on(AudioPlayerStatus.Playing, () => {
 });
 
 player.on(AudioPlayerStatus.Idle, () => {
-  player.play(getNextResource(queue))
+  if(queue.length > 0) {
+    player.play(getNextResource(queue))
+  }
 });

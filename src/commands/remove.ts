@@ -1,7 +1,5 @@
 import { CommandInt } from "../interface/commandInt";
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { getNextResource } from "../utils/queueManager";
-import { AudioPlayerPlayingState, getVoiceConnection } from "@discordjs/voice";
 
 export const remove: CommandInt = {
     data: new SlashCommandBuilder()
@@ -15,7 +13,7 @@ export const remove: CommandInt = {
         ) as SlashCommandBuilder,
     run: async (interaction, currentQueue, player) => {
         const reg = new RegExp('^[0-9]+$');
-        const { guildId, options } = interaction;
+        const { options } = interaction;
         const input = options.getString("idx") || ''
 
         if (!currentQueue || currentQueue.length === 0) {
@@ -36,20 +34,19 @@ export const remove: CommandInt = {
 
         if (idx < 0 || idx >= currentQueue.length) {
             interaction?.reply({
-                content: "Queue is empty. Please load songs first.",
+                content: "Wrong index.",
             });
             return
         };
 
-        currentQueue.splice(idx, 1);
-
         const currentPlayingIdx = currentQueue.findIndex(s => s.isPlaying);
 
+        currentQueue.splice(idx, 1);
+
         if (idx === currentPlayingIdx) {
-            if (player) {
-                player.play(getNextResource(currentQueue));
-            }
+            player?.stop();
         }
+
         interaction?.reply({
             content: "Removed song.",
         });

@@ -6,8 +6,7 @@ import { next } from './next'
 import { play } from './play'
 import { previous } from './previous'
 import { remove } from './remove'
-import { resume } from './resume'
 import { showQueue } from './showQueue'
 import { stop } from './stop'
 
-export const CommandList: CommandInt [] = [addToQueue, clear, next, play, previous, remove, resume, showQueue, stop]
+export const CommandList: CommandInt [] = [addToQueue, clear, next, play, previous, remove, showQueue, stop]
