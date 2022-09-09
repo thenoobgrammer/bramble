@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Client, VoiceChannel } from "discord.js";
-import { joinVoiceChannel } from "@discordjs/voice";
+import { joinVoiceChannel, DiscordGatewayAdapterCreator } from "@discordjs/voice";
 import { CommandList } from "../commands/_CommandList";
 import {
   APIApplicationCommandOption,
@@ -20,7 +20,7 @@ export const onReady = async (BOT: Client) => {
     joinVoiceChannel({
       channelId: vChannel.id,
       guildId: vChannel.guild.id,
-      adapterCreator: vChannel.guild.voiceAdapterCreator,
+      adapterCreator: vChannel.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
     });
 
   const commandData: {
