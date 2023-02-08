@@ -8,9 +8,7 @@ COPY .env .
 
 RUN ls -a
 RUN npm install
-RUN npm install -g pm2
-RUN npm install -g ts-node
-RUN pm2 install typescript
+RUN npm install ts-node -g
 
 COPY . .
 
