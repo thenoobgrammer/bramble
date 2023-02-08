@@ -1,9 +1,10 @@
 {
-  "name": "discord_bot",
-  "version": "1.0.01",
+  "name": "bramble",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "ts-node index.ts",
+    "start": "pm2 start --interpreter ts-node pm2.config.ts",
+    "pm2:stop": "pm2 stop --interpreter ts-node pm2.config.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "thenoobgrammer",
