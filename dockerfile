@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY package.json .
 COPY tsconfig.json .
+COPY .env .
 
 RUN ls -a
 RUN npm install
